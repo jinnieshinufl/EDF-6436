@@ -1,7 +1,5 @@
 ---
-title: "Basic Statistics Review with R"
-author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "10/18/2021"
+title: "lab1"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -377,6 +375,4 @@ $$ [\hat{\beta_{i}}-1.96*s.e(\hat{\beta_{i}}), \hat{\beta_{i}}+1.96*s.e(\hat{\be
 summary(fit.reg)
 confint(fit.reg)
 ```
-
-
 
