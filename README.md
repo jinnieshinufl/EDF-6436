@@ -1,6 +1,6 @@
 # EDF-6436
 
-## Spring 2022 - EDF 6436 - Theory of Measurement 
+## Spring 2022 - EDF 6436: Theory of Measurement 
 
 Welcome, everyone! This is a repository of the lab materials provided in EDF 6436 - SPRING 2022
 
