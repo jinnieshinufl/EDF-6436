@@ -7,8 +7,10 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(gradethis)
 library(truncnorm)
 library(ggplot2)
+tutorial_options(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -73,6 +75,31 @@ str(my.data) # this function str() will provide information regarding the data (
 mode(my.data$age) # in order to look at the specific variable [dataset]$[varaible name]
 ```
 
+```{r mean_mode, exercise=TRUE}
+# check the mean of the variable ``gpa_pre`` 
+
+```
+
+```{r mean_mode-solution}
+mean(my.data$gpa_pre)
+```
+
+```{r mean_mode-check}
+grade_this_code()
+```
+
+```{r mean_mode2, exercise=TRUE}
+# check the standard deviation of the variable ``creativity``
+
+```
+
+```{r mean_mode2-solution}
+sd(my.data$creativity)
+```
+
+```{r mean_mode2-check}
+grade_this_code()
+```
 
 ## 4. Central Tendency 
 
