@@ -17,5 +17,7 @@ For week 1: Basic Statistics review for EDF 6436
 learnr::run_tutorial("week1", package = "LabR6436")
 ```
 
+### Submission Report 
+At the end of each lab tutorial, students can download submission reports that describe what questions and exercises they attempted. 
 
 
