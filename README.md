@@ -9,7 +9,7 @@ You can copy and past this following code in R to run the lab tutorial
 ```r
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 remotes::install_github("rstudio/learnr")
-remotes::install_github("rstudio/gradethis")
+remotes::install_github("rstudio/gradethis", force=TRUE)
 ```
 For week 1: Basic Statistics review for EDF 6436 
 
