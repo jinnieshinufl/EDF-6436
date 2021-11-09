@@ -1,5 +1,6 @@
 ---
-title: "lab1"
+title: "Basic Statistics Review with R"
+author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
