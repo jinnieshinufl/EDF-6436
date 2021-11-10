@@ -11,10 +11,16 @@ remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess 
 remotes::install_github("rstudio/learnr", force=TRUE)
 remotes::install_github("rstudio/gradethis", force=TRUE)
 ```
+### Syllabus (Tentative)
 For week 1: Basic Statistics review for EDF 6436 
 
 ```r
 learnr::run_tutorial("week1", package = "LabR6436")
+```
+For week 4: CTT Item Analysis 
+
+```r
+learnr::run_tutorial("week4", package = "LabR6436")
 ```
 
 ### Submission Report 
