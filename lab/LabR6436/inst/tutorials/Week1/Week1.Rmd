@@ -149,10 +149,10 @@ This indicates the **sum of each indivudal's squared deviation from the mean**
  $$ SS = \sum_{i = 1}^{N}(x_i - \bar{X})^2 $$
 ---
 
-**[CLASS EXERCISE]**: Let's compute the Sum of Squares for *GAP-Post*!
+**[CLASS EXERCISE]**: Let's compute the Sum of Squares for *gpa_post*!
 
 ```{r SS, echo=FALSE, exercise=TRUE}
-# first we will create a list that substracts the mean from each data point of GPA-Post
+# first we will create a list that subtracts the mean from each data point of GPA-Post
 var1 = my.data$gpa_post - mean(my.data$gpa_post)
 hist(var1) # Did the distribution shape change? 
 
@@ -163,6 +163,28 @@ var2 = var1^2
 SS = sum(var2) 
 print(SS)
 ```
+
+```{r SS2, echo=FALSE, exercise=TRUE}
+# Compute the Sum of Squares for 'creativity'
+
+```
+
+```{r SS2-solution}
+
+var1 = my.data$creativity - mean(my.data$creativity)
+
+# Then, we will create list that saves the sum of squares of the elements in var1 
+var2 = var1^2 
+
+# finally, we compute the sum! 
+SS = sum(var2) 
+SS
+```
+
+```{r SS2-check}
+grade_this_code()
+``` 
+
 
 
 ## 6. Z-scores (Standard Score)
@@ -191,7 +213,7 @@ print(paste0('Z score is:', ANSWER))
 **CLASS EXERCISE **
 
 - Q1: Calculate the mean of item 1 and interpret it with respect to item difficulty 
-- Q2: Calculate the variance and standard deviation of the test score variable 
+- Q2: Calculate (1) the variance and (2) standard deviation of the test score variable 
 - Q3: Calculate person 4's z-score for the test score variable and interpret it 
 
 | Student | Item 1 | Test score |
@@ -201,20 +223,56 @@ print(paste0('Z score is:', ANSWER))
 |    3    |    0   |     89     |
 |    4    |    1   |     72     |
 
-```{r exercise, echo=FALSE, exercise=TRUE}
+```{r q1, echo=FALSE, exercise=TRUE}
 # Q1 
+item_score = c(0,0,0,1)
+#### your code here ###
 
+#######################
+```
 
+```{r q1-solution}
+item_score = c(0,0,0,1)
+mean(item_score)
+``` 
 
-# Q2 
+```{r q1-check}
+grade_this_code()
+``` 
 
+```{r q2, echo=FALSE, exercise=TRUE}
+# Q2
+test_score = c(66, 78, 89, 72)
+#### your code here ###
 
+#######################
+```
 
+```{r q2-solution}
+test_score = c(66, 78, 89, 72)
+var(test_score)
+sd(test_score)
+```
 
+```{r q2-check}
+grade_this_code()
+```
+
+```{r q3, echo=FALSE, exercise=TRUE}
 # Q3 
+test_score = c(66, 78, 89, 72)
+#### your code here ###
 
+#######################
+```
 
+```{r q3-solution}
+test_score = c(66, 78, 89, 72)
+(72 - mean(test_score) )/var(test_score)
+```
 
+```{r q3-check}
+grade_this_code()
 ```
 
 ## 7. Covariance 
