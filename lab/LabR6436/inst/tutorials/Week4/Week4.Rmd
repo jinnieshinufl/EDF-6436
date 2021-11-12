@@ -50,6 +50,11 @@ Let's use `describe()` to look at the descriptive statistics of the `scores` dat
 ```{r, test, echo=FALSE, exercise=TRUE}
 describe(scores)
 
+x <- scores$'data$score'
+h <- hist(x, las=1, breaks="FD", xlab= "Red vertical line shows the mean.", main="", col = "cyan")
+rug(x)
+abline(v = mean(x), col = "red", lwd = 2)
+
 ```
 
 ## 2. Item Difficulty 
@@ -126,14 +131,14 @@ text(outlier, paste("i", outlier[,1], sep = ""), col = "red", cex = .7)
 ```
 
 ### Item Characteristic Curve ``cttICC``
-
-How do the two plots differ?
+- Given the information above, identify the two items with the highest and the lowest discrimination index.  
+- Plot the item characteristic curve using \
+`cttICC(data$score, response$#ItemNameHere, colTheme="spartans", cex=1.5)`
+- How do the two plots differ?
 ```{r, icc, echo=TRUE, exercise=TRUE}
-# obtaining total test scores for i12 (with the highest pbis)
-cttICC(scores$score, response$i12, colTheme="spartans", cex=1.5)
 
-# obtaining total test scores for i12 (with the lowest pbis)
-cttICC(scores$score, response$i16, colTheme="spartans", cex=1.5)
+
+
 ```
 
 ## 4. Distractor Analysis 
