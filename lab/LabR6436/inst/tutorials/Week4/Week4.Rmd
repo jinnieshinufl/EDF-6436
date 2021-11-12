@@ -130,6 +130,22 @@ outlier <- data.matrix(subset(item.discrimination,
 text(outlier, paste("i", outlier[,1], sep = ""), col = "red", cex = .7)
 ```
 
+### Item Difficulty and Discrimination `
+
+```{r, icc2, echo=TRUE, exercise=TRUE}
+iA <- itemAnalysis(response, hardFlag=.25, pBisFlag=.15)
+result = iA$itemReport 
+plot(y=result$itemMean, x=result$pBis, 
+    ylim=c(0,1) , xlim=c(0,1), 
+     pch=18, 
+     cex=2, 
+     col="#69b3a2",
+     xlab="Item Discrimination", ylab="Item Difficulty",
+     main="A simple scatterplot"
+     )
+
+```
+
 ### Item Characteristic Curve ``cttICC``
 - Given the information above, identify the two items with the highest and the lowest discrimination index.  
 - Plot the item characteristic curve using \
