@@ -6,69 +6,224 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-
-## Topic 1
-
-### Exercise 
-
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
-
-Write the R code required to add two plus two:
-
-```{r two-plus-two, exercise=TRUE}
-
+## Alternate-form Reliability 
+```{r, af, echo=TRUE, exercise=TRUE}
+data = read.table("./data/AF_data.dat",header=TRUE)
+head(data)
+assign("data", data, envir=globalenv()) 
 ```
 
-### Exercise with Code
+### Score distribution of Form A and B 
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+```{r, af3, echo=TRUE, exercise=TRUE}
+# compute the total score of Form A
+FormA = 
 
-Now write a function that adds any two numbers and then call it:
+# compute the total score of Form B 
+FormB = 
+# plot the score distribution of Form A using `hist()`
+hist(FormA)
 
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
+# plot the score distribution of Form B using `hist()`
+hist(FormB)
+
+#assign the variables as global variables 
+assign("FormA", FormA, envir=globalenv()) 
+assign("FormB", FormB, envir=globalenv())
 ```
 
-## Topic 2
+### Calculate the Alternate-form Reliability 
+- Between the form A and B `FormA` and `FormB`
 
-### Exercise with Hint
-
-*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
-
-Modify the following code to limit the number of rows printed to 5:
-
-```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
-mtcars
+```{r, af2, echo=FALSE, exercise=TRUE}
+cor(FormA,FormB)
 ```
 
-```{r print-limit-hint}
-head(mtcars)
+```{r, af2-solution}
+cor(FormA,FormB)
 ```
 
-### Quiz
-
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
-
-Some questions to verify that you understand the purposes of various base and recommended R packages:
-
-```{r quiz}
-quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
-  ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
-  )
-)
+```{r, af2-check}
+grade_this_code()
 ```
+
+## Test-Retest Reliability 
+
+```{r, tr, echo=TRUE, exercise=TRUE}
+data = read.table("./data/TR_data.dat",header=TRUE)
+head(data)
+assign("data", data, envir=globalenv()) 
+```
+
+### Score distribution of Test 1 and Test 2 
+```{r, tr2, echo=FALSE, exercise=TRUE}
+# compute the total score of Form A
+Test1 = 
+
+# compute the total score of Form B 
+Test2 = 
+# plot the score distribution of Form A using `hist()`
+hist(Test1)
+
+# plot the score distribution of Form B using `hist()`
+hist(Test2)
+
+#assign the variables as global variables 
+assign("Test1", FormA, envir=globalenv()) 
+assign("Test2", FormB, envir=globalenv())
+```
+
+### Calculate the Test-Retest Reliability 
+- Between the Test 1 and Test 2 (`Test1` and `Test2`)
+
+```{r, TR3, echo=FALSE, exercise=TRUE}
+cor(Test1, Test2)
+```
+
+```{r, TR3-solution}
+cor(Test1, Test2)
+```
+
+```{r, TR3-check}
+grade_this_code()
+```
+
+## Split-Half Reliability 
+```{r, sh, echo=TRUE, exercise=TRUE}
+data = read.table("./data/SH_data.dat",header=TRUE)
+data = data[,2:61]
+assign("data", data, envir=globalenv()) 
+```
+
+### Selecting Random Items For Halves 
+```{r, sh2, exercise=TRUE, echo=TRUE}
+# selecting random items for halves
+halves = sample(1:60, 60, replace=F)
+half1 = halves[1:30]
+half2 = halves[31:60]
+
+assign("half1", half1, envir=globalenv()) 
+assign("half2", half2, envir=globalenv()) 
+```
+
+### Creating data set of half items 
+
+```{r, sh3, exercise=TRUE, echo=TRUE}
+# creating data set of half 1 items only and calculating summated scores
+data1 = subset(data,select=half1)
+X_1 = rowSums(data1)
+
+# creating data set of half 2 items only and calculating summated scores
+data2 = subset(data,select=half2)
+X_2 = rowSums(data2)
+
+assign("X_1", X_1, envir=globalenv()) 
+assign("X_2", X_2, envir=globalenv()) 
+```
+
+### Correlation between the Two Scores 
+```{r, sh4, exercise=TRUE, echo=FALSE}
+# correlation between the two summated score variables
+corr = cor(X_1,X_2)
+
+# Spearman Brown's reliability between two split halves
+rho = (2*corr)/(1+corr)
+```
+
+### Repeating the process 
+```{r, sh5, exercise=TRUE, echo=FALSE, exercise.lines=35}
+result =c()
+for(y in 1:1000){
+    # selecting random items for halves
+    halves = sample(1:60, 60, replace=F)
+    half1 = halves[1:30]
+    half2 = halves[31:60]
+    
+    # creating data set of half 1 items only and calculating summated scores
+    data1 = subset(data,select=half1)
+    X_1 = rowSums(data1)
+    
+    # creating data set of half 2 items only and calculating summated scores
+    data2 = subset(data,select=half2)
+    X_2 = rowSums(data2)
+    
+    # correlation between the two summated score variables
+    corr = cor(X_1,X_2)
+    
+    # Spearman Brown's reliability between two split halves
+    rho = (2*corr)/(1+corr)
+    
+    # assigning a name to rho that has the repetition number in it
+    name = paste("r",y,sep="")
+    assign(name, value=rho)
+    result = c(result, rho)
+    # ending the loop
+    }
+
+# obtaining the average rho across the 1,000 repetitions
+ymax <- max(result)
+ymin <- min(result)
+
+plot(result, type="l", col="#0000ff10", ylim=c(ymin, ymax))
+abline(h=mean(result), col="blue")
+```
+
+## Cronbach's Alpha 
+
+$$ \alpha = \frac{k}{k-1}\left(\frac{2\sum_{i\neq{j}}\sigma_{ij}}{\sigma_{c}^2}\right)\text{,} $$ 
+
+```{r, ca, echo=TRUE, exercise=TRUE, exercise.lines= 23}
+data = read.table("./data/Cronbach_data.dat",header=TRUE)
+assign("data", data, envir=globalenv()) 
+
+# calculating total summated scores
+X = rowSums(data)
+
+# calculating variance of total summated scores
+varX = var(X)
+
+# calculating variance of each item score
+var_matrix = var(data)
+vars = diag(var_matrix)
+
+# calculating sum of item variances
+sum_vars = sum(vars)
+
+# obtaining number of items
+n_items = length(vars)
+
+# calculating alpha
+alpha = (n_items/(n_items-1))*(1-(sum_vars/varX))
+
+print(alpha)
+```
+
+#### Using the `CTT()` package fromt the last lection
+```{r, ctt2, exercise=TRUE}
+
+library(CTT)
+reliability(data, itemal=TRUE)
+```
+
+## Spearman-Brown Prophecy
+
+The Spearman-Brown prophecy formula is great for seeing how many more (or fewer) items we will need to achieve a desired reliability.
+
+$$ \rho_{_{CC'new}} = \frac{k\rho_{_{CC'old}}}{1 + (k - 1)\rho_{_{CC'old}} } $$ 
+
+For instance, how many more items do we need to achieve the reliability of 0.90 
+
+$$ k = \frac{\rho_{_{CC'new}}(1 - \rho_{_{CC'old}})}{\rho_{_{CC'old}}(1 - \rho_{_{CC'new}}) }\\ $$ 
+
+```{r, sp, exercise=TRUE}
+alpha = 0.83
+k = (0.90*(1-alpha))/(alpha*(1-0.90))
+
+library(CTT)
+relachieved_if_doubled <- spearman.brown(alpha, input = 1.8, n.or.r = "n")
+relachieved_if_doubled
+``` 
