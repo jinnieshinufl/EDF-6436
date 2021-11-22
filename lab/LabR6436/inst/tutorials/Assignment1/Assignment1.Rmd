@@ -1,0 +1,129 @@
+---
+title: "Assignment 1"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+#install.packages("remotes")
+#remotes::install_github("cddesja/hemp")
+library("hemp")
+library(learnr)
+library(questionr)
+library(corrplot)
+library(psych)
+library(ggpubr)
+library(EFAtools)
+library(LabR6436)
+tut_reptitle <- "QSS Tutorial 0: Output Report"
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+### Assignment 1: 
+You’ve been provided operational data on a 10 item reading comprehension test taken by N= 831 5th grade students. We will call this `data`. All items are binary scored. This test is intended to be used across a wide range of student reading comprehension abilities for low-stakes formative purposes in the classroom. Complete and report the following analyses:
+
+```{r}
+data <- read.csv('./data/timss_g4_2015_10_reading_items.csv')
+assign("data", data, envir=globalenv())
+```
+
+## Q1
+*(2 points)* Provide a single table displaying frequency distributions of each item’s data. Compare the frequency distribution of item 7 to all other items.
+
+```{r, q1, exercise=TRUE, echo=FALSE}
+
+```
+
+## Q2
+
+*(3 points)* Provide the CTT item difficulty estimate (p) for each item. 
+
+- (1) Select an item that you consider to be relatively easy for the sample of 831 examinees. 
+- (2) Would this be true for other samples from the same population? Why or why not?
+- (3) Would this be true for samples from another population? Why or why not?
+
+```{r, q2, exercise=TRUE, echo=FALSE}
+###################### YOUR CODE HERE ##########################
+colSums(data)/831
+
+
+
+###################### YOUR ANSWER HERE ##########################
+# (1)
+#
+# (2)
+#
+# (3) 
+#
+###################################################################
+```
+
+
+## Q3
+
+*(2 points)* Create a joint frequency distribution table for items 2 and 3. Calculate the inter-item correlation between item 2 and item 3, using the formula we defined in class. 
+
+- Describe the bivariate relationship between the two items based on both the joint frequency distribution table and the correlation statistic.
+
+```{r, q3, exercise=TRUE, echo=FALSE}
+###################### YOUR CODE HERE ##########################
+
+
+
+
+###################### YOUR ANSWER HERE ##########################
+# (1)
+#
+#
+#
+###################################################################
+```
+
+## Q4
+*(2 points)* Create a joint frequency distribution table for items 3 and 5. Calculate the inter-item correlation between item 3 and item 5, using the formula we defined in class. 
+
+- Compare the joint frequency distribution and correlation coefficient to those in item (c).
+
+```{r, q4, exercise=TRUE, echo=FALSE}
+###################### YOUR CODE HERE ##########################
+
+
+
+
+###################### YOUR ANSWER HERE ##########################
+# (1)
+#
+# 
+#
+###################################################################
+```
+
+## Q5
+*(2 points)* Calculate CTT item discrimination for each item. 
+
+- Provide a summary interpretation of the discrimination estimates.)
+
+```{r, q5, exercise=TRUE, echo=FALSE}
+###################### YOUR CODE HERE ##########################
+
+
+
+
+###################### YOUR ANSWER HERE ##########################
+# (1)
+#
+#
+#
+###################################################################
+```
+
+## Submit
+
+```{r context="setup"}
+submission_ui
+```
+
+```{r context="server"}
+submission_server()
+```
