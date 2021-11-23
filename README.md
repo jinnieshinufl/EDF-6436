@@ -17,6 +17,13 @@ For week 1: Basic Statistics review for EDF 6436
 ```r
 learnr::run_tutorial("week1", package = "LabR6436")
 ```
+
+For week 2: Test Construction and Test Scores 
+
+```r
+learnr::run_tutorial("week2", package = "LabR6436")
+```
+
 For week 4: CTT Item Analysis 
 
 ```r
