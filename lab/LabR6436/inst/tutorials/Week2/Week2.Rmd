@@ -1,0 +1,109 @@
+---
+title: "Test constructions and test scores"
+output: 
+  learnr::tutorial:
+    progressive: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(psych)
+library(gradethis)
+library(ggplot2)
+library(CTT)
+tutorial_options(exercise.checker = gradethis::grade_learnr)
+knitr::opts_chunk$set(echo = FALSE)
+
+```
+
+## 1. Exam Data (MC-items)
+A data frame with 100 observations on the following 20 items. 
+
+```{r print-limit-hint}
+data(CTTdata)
+attach(CTTdata) 
+head(CTTdata)
+data(CTTkey)
+
+data <- score(CTTdata,CTTkey, output.scored=TRUE)
+assign("data", data, envir=globalenv()) 
+assign("response", as.data.frame(data$scored), envir=globalenv()) 
+
+head(response) # this saves the item score (0 or 1)
+```
+
+## 2. Item Difficulty 
+- The proportion of those responding correctly
+
+```{r,  data, exercise=TRUE, echo=FALSE}
+
+# Let's calculate the difficulty of item 2
+
+p = sum(response$i2)/100
+print(p)
+
+```
+
+```{r,  data2, exercise=TRUE, echo=FALSE, exercise.completion=TRUE}
+
+# Let's calculate the difficulty of item 10
+
+
+
+```
+
+## 3. Inter-item Reliability 
+- inter-item correlations from joint frequency distribution tables
+
+```{r,  data3, exercise=TRUE, echo=FALSE}
+# Let's compute the inter-item correlation score between item 7 and 9 
+# First, we will have to create a joint frequency distribution table 
+
+table(response$i7, response$i9)
+
+```
+
+```{r, data4, exercise=TRUE, echo=FALSE, exercise.lines=15}
+
+# Second, we will have to identify the following components (p16, Topic 2)
+
+pjk = 
+  
+pj = 
+  
+pk = 
+  
+qj = 
+  
+qk = 
+
+# The final outcome will be: 
+rho = (pjk-(pj*pk))/(sqrt(pj*qj*pk*qk))  
+```
+
+
+## 4. Total Test scores 
+Total test scores are frequently used in low stakes assessment
+
+```{r, data5, exercise=TRUE, echo=FALSE, exercise.lines=10}
+# total score can be computed using rowSums()
+
+rowSums(response)[13]
+
+###### YOUR CODE HERE #########
+
+
+################################
+```
+
+```{r letter-b, echo=FALSE}
+
+question("What is the total test score of the examinee 11?",
+  answer("10", correct = TRUE),
+  answer("11"),
+  answer("12"), 
+  answer("13")
+)
+```
+

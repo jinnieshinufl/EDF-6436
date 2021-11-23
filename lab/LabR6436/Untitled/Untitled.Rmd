@@ -1,39 +1,36 @@
 ---
-title: "Assignment 1"
-output: learnr::tutorial
-runtime: shiny_prerendered
+title: "Lab Name"
+author: "Author Name"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
 ---
 
-```{r setup, include=FALSE}
-#install.packages("remotes")
-#remotes::install_github("cddesja/hemp")
-library("hemp")
-library(learnr)
-library(questionr)
-library(corrplot)
-library(psych)
-library(ggpubr)
-library(EFAtools)
-library(LabR6436)
-tut_reptitle <- "QSS Tutorial 0: Output Report"
-knitr::opts_chunk$set(echo = FALSE)
-
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
 ```
 
 ### Assignment 1: 
 You’ve been provided operational data on a 10 item reading comprehension test taken by N= 831 5th grade students. We will call this `data`. All items are binary scored. This test is intended to be used across a wide range of student reading comprehension abilities for low-stakes formative purposes in the classroom. Complete and report the following analyses:
 
 ```{r}
-data <- read.csv('./data/timss_g4_2015_10_reading_items.csv')
+data <- read.table('./data/timss_g4_2015_10_reading_items.csv')
+data <- as.data.frame(data)
 assign("data", data, envir=globalenv())
 ```
 
 ## Q1
 *(2 points)* Provide a single table displaying frequency distributions of each item’s data. Compare the frequency distribution of item 7 to all other items.
 
-```{r, q1, exercise=TRUE, echo=FALSE}
+```{r, q1, echo=FALSE}
+###################### YOUR CODE HERE ##########################
+data
 
+# here you go
+
+################################################################
 ```
+
 
 ## Q2
 
@@ -43,10 +40,9 @@ assign("data", data, envir=globalenv())
 - (2) Would this be true for other samples from the same population? Why or why not?
 - (3) Would this be true for samples from another population? Why or why not?
 
-```{r, q2, exercise=TRUE, echo=FALSE}
+```{r, q2, echo=FALSE}
 ###################### YOUR CODE HERE ##########################
 colSums(data)/831
-
 
 
 ###################### YOUR ANSWER HERE ##########################
@@ -66,7 +62,7 @@ colSums(data)/831
 
 - Describe the bivariate relationship between the two items based on both the joint frequency distribution table and the correlation statistic.
 
-```{r, q3, exercise=TRUE, echo=FALSE}
+```{r, q3, echo=FALSE}
 ###################### YOUR CODE HERE ##########################
 
 
@@ -85,7 +81,7 @@ colSums(data)/831
 
 - Compare the joint frequency distribution and correlation coefficient to those in item (c).
 
-```{r, q4, exercise=TRUE, echo=FALSE}
+```{r, q4, echo=FALSE}
 ###################### YOUR CODE HERE ##########################
 
 
@@ -104,7 +100,7 @@ colSums(data)/831
 
 - Provide a summary interpretation of the discrimination estimates.)
 
-```{r, q5, exercise=TRUE, echo=FALSE}
+```{r, q5, echo=FALSE}
 ###################### YOUR CODE HERE ##########################
 
 
@@ -118,12 +114,4 @@ colSums(data)/831
 ###################################################################
 ```
 
-## Submit
 
-```{r context="setup"}
-submission_ui
-```
-
-```{r context="server"}
-submission_server()
-```

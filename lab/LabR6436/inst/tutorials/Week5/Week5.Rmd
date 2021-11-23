@@ -209,6 +209,23 @@ library(CTT)
 reliability(data, itemal=TRUE)
 ```
 
+#### Reliability and Confidence Interval 
+
+If we know the mean and variance of the observed scores on a test, as well as the reported reliability, we can estimate a confidence interval around an estimated true score. Let’s use Alba’s predicted true score.
+
+
+```{r ci, exercise=TRUE, echo=FALSE}
+rel <- 
+SEM <- 
+VarX <- 
+Var_E  <- (1-rel)*VarX
+SE_Msr <- sqrt(Var_E) 
+LB     <- x - 1.96*SEM
+UB     <- x + 1.96*SEM
+
+``` 
+
+
 ## Spearman-Brown Prophecy
 
 The Spearman-Brown prophecy formula is great for seeing how many more (or fewer) items we will need to achieve a desired reliability.

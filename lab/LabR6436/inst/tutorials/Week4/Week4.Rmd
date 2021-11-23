@@ -103,9 +103,24 @@ $$ d_{j} = \frac{\sum_{i=1}^{N}(X_{ij}-p_{j})(X_{C_{i}} - \mu_{X_{c}})}{\sqrt{\s
 
 ### Item Analysis ``itemAnalysis()``
 
+
+```{r, IA1, echo=TRUE, exercise=TRUE}
+# Let's compute item discrimination for item 10 (i10):
+corrected_data = subset(response, response$i10==1)
+
+m1 = mean(rowSums(subset(corrected_data, select = -c(i10) )))
+mt = mean(rowSums(subset(response, select = -c(i10) )))
+sd_t = sd(rowSums(subset(response, select = -c(i10) )))
+p = sum(response$i10)/100
+q = 1- p
+
+pbis = ((m1-mt)/sd_t)*(sqrt(p/q))
+```
+
 ```{r, IA, echo=TRUE, exercise=TRUE}
 # point biserial 
 iA <- itemAnalysis(response, hardFlag=.25, pBisFlag=.15)
+iA$itemReport$pBis = round(iA$itemReport$pBis,2)
 print(iA$itemReport)
 
 # Plot items based on the pre-defined cut score (0.2)
