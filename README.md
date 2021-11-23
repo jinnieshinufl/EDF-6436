@@ -39,6 +39,13 @@ For week 7: Validity
 ```r
 learnr::run_tutorial("week7", package = "LabR6436")
 ```
+
+For week 8: EFA
+
+```r
+learnr::run_tutorial("week8", package = "LabR6436")
+```
+
 ### Submission Report 
 At the end of each lab tutorial, students can download submission reports that describe what questions and exercises they attempted. 
 
