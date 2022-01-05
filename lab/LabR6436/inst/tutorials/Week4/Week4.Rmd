@@ -19,26 +19,23 @@ knitr::opts_chunk$set(echo = FALSE)
 ## 1. Exam Data (MC-items)
 A data frame with 100 observations on the following 20 items. 
 
-```{r print-limit-hint}
+```{r data2, exercise=TRUE, echo=FALSE} 
+
 data(CTTdata)
 attach(CTTdata) 
 head(CTTdata)
 
-data(CTTkey)
 print('Answer key is:')
-CTTkey
-assign("CTTkey", CTTkey, envir=globalenv()) 
-
-
+data(CTTkey)
+print(CTTkey) 
 ```
 
 ### Change the dataframe to dichotomous 
-```{r, score_data, echo=TRUE}
+```{r, score_data, echo=TRUE, execise.setup="data2"}
 
 data <- score(CTTdata,CTTkey, output.scored=TRUE)
-assign("data", data, envir=globalenv()) 
-assign("response", as.data.frame(data$scored), envir=globalenv()) 
-assign("scores", as.data.frame(data$score), envir=globalenv()) 
+response <- as.data.frame(data$scored)
+scores <- as.data.frame(data$score)
 
 head(scores) # this saves each student's total score 
 head(response) # this saves the item score (0 or 1)
@@ -47,11 +44,12 @@ head(response) # this saves the item score (0 or 1)
 ### Test Score 
 Let's use `describe()` to look at the descriptive statistics of the `scores` data
 
-```{r, test, echo=FALSE, exercise=TRUE}
+```{r, test, echo=FALSE, exercise=TRUE, execise.setup="score_data"}
 describe(scores)
 
 x <- scores$'data$score'
-h <- hist(x, las=1, breaks="FD", xlab= "Red vertical line shows the mean.", main="", col = "cyan")
+h <- hist(x, las=1, breaks="FD", xlab= "Red vertical line shows the mean.", 
+          main="", col = "cyan")
 rug(x)
 abline(v = mean(x), col = "red", lwd = 2)
 
@@ -60,7 +58,7 @@ abline(v = mean(x), col = "red", lwd = 2)
 ## 2. Item Difficulty 
 
 Now we have a new data frame called `response` which stores the dichotomous item scores
-```{r, response_data, echo=TRUE}
+```{r, response_data, echo=TRUE, exercise.setup="score_data"} 
 head(response)
 ```
 
@@ -70,11 +68,10 @@ In CTT, item difficulty, also known as item p-value, is often quantified in term
 
 Let's calculate the P-value using `colMeans()`
 
-```{r, answer1, echo=TRUE, exercise=TRUE}
+```{r, answer1, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # Let's compute the p-value first (and call this `pj`)
 pj = # compute the p values 
 
-assign("pj", pj, envir=globalenv()) 
 ```
 
 ```{r, answer1-solution}
@@ -104,7 +101,7 @@ $$ d_{j} = \frac{\sum_{i=1}^{N}(X_{ij}-p_{j})(X_{C_{i}} - \mu_{X_{c}})}{\sqrt{\s
 ### Item Analysis ``itemAnalysis()``
 
 
-```{r, IA1, echo=TRUE, exercise=TRUE}
+```{r, IA1, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # Let's compute item discrimination for item 10 (i10):
 corrected_data = subset(response, response$i10==1)
 
@@ -117,7 +114,7 @@ q = 1- p
 pbis = ((m1-mt)/sd_t)*(sqrt(p/q))
 ```
 
-```{r, IA, echo=TRUE, exercise=TRUE}
+```{r, IA, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # point biserial 
 iA <- itemAnalysis(response, hardFlag=.25, pBisFlag=.15)
 iA$itemReport$pBis = round(iA$itemReport$pBis,2)
@@ -147,7 +144,7 @@ text(outlier, paste("i", outlier[,1], sep = ""), col = "red", cex = .7)
 
 ### Item Difficulty and Discrimination `
 
-```{r, icc2, echo=TRUE, exercise=TRUE}
+```{r, icc2, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 iA <- itemAnalysis(response, hardFlag=.25, pBisFlag=.15)
 result = iA$itemReport 
 plot(y=result$itemMean, x=result$pBis, 
@@ -166,7 +163,7 @@ plot(y=result$itemMean, x=result$pBis,
 - Plot the item characteristic curve using \
 `cttICC(data$score, response$#ItemNameHere, colTheme="spartans", cex=1.5)`
 - How do the two plots differ?
-```{r, icc, echo=TRUE, exercise=TRUE}
+```{r, icc, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 
 
 
@@ -176,7 +173,7 @@ plot(y=result$itemMean, x=result$pBis,
 
 Option/distractor analysis shows the percentage of students choosing each option in a dichotomous item.
 
-```{r, distract, echo=TRUE, exercise=TRUE}
+```{r, distract, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # Distractor Analysis 
 result <- distractor.analysis(CTTdata,CTTkey)
 result

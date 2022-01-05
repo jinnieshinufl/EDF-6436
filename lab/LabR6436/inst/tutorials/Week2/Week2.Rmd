@@ -20,23 +20,21 @@ knitr::opts_chunk$set(echo = FALSE)
 ## 1. Exam Data (MC-items)
 A data frame with 100 observations on the following 20 items. 
 
-```{r print-limit-hint}
+```{r, source, exercise=TRUE, echo=FALSE}
 data(CTTdata)
 attach(CTTdata) 
 head(CTTdata)
 data(CTTkey)
 
 data <- score(CTTdata,CTTkey, output.scored=TRUE)
-assign("data", data, envir=globalenv()) 
-assign("response", as.data.frame(data$scored), envir=globalenv()) 
-
+response <- as.data.frame(data$scored)
 head(response) # this saves the item score (0 or 1)
 ```
 
 ## 2. Item Difficulty 
 - The proportion of those responding correctly
 
-```{r,  data, exercise=TRUE, echo=FALSE}
+```{r,  data, exercise=TRUE, echo=FALSE, exercise.setup="source"}
 
 # Let's calculate the difficulty of item 2
 
@@ -45,7 +43,7 @@ print(p)
 
 ```
 
-```{r,  data2, exercise=TRUE, echo=FALSE, exercise.completion=TRUE}
+```{r,  data2, exercise=TRUE, echo=FALSE, exercise.completion=TRUE, exercise.setup="source"}
 
 # Let's calculate the difficulty of item 10
 
@@ -56,7 +54,7 @@ print(p)
 ## 3. Inter-item Reliability 
 - inter-item correlations from joint frequency distribution tables
 
-```{r,  data3, exercise=TRUE, echo=FALSE}
+```{r,  data3, exercise=TRUE, echo=FALSE, exercise.setup="source"}
 # Let's compute the inter-item correlation score between item 7 and 9 
 # First, we will have to create a joint frequency distribution table 
 
@@ -64,7 +62,7 @@ table(response$i7, response$i9)
 
 ```
 
-```{r, data4, exercise=TRUE, echo=FALSE, exercise.lines=15}
+```{r, data4, exercise=TRUE, echo=FALSE, exercise.lines=15, exercise.setup="source"}
 
 # Second, we will have to identify the following components (p16, Topic 2)
 
@@ -86,7 +84,7 @@ rho = (pjk-(pj*pk))/(sqrt(pj*qj*pk*qk))
 ## 4. Total Test scores 
 Total test scores are frequently used in low stakes assessment
 
-```{r, data5, exercise=TRUE, echo=FALSE, exercise.lines=10}
+```{r, data5, exercise=TRUE, echo=FALSE, exercise.lines=10, exercise.setup="source"}
 # total score can be computed using rowSums()
 
 rowSums(response)[13]

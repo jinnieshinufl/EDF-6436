@@ -16,7 +16,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## 1. Student GPA Data
 
-```{r print-limit-hint}
+```{r data, echo=TRUE, exercise=TRUE}
+
 set.seed(3221)
 
 complement <- function(y, rho, x) {
@@ -33,11 +34,14 @@ my.data <- data.frame(id = c(1:250),
                       gpa_pre = rtruncnorm(n=250, a=.92, b=4.86, mean=2.81, sd = 0.68), 
                       creativity = rnorm(250, 80.86, 9.570))
 my.data$gpa_post = complement(my.data$gpa_pre, 0.752)
-assign("my.data", my.data, envir=globalenv()) # we will save and run this dataset throughout this exercise. 
 
-my.data
 ```
 
+```{r data_show, echo=TRUE, exercise=TRUE, exercise.setup='data'}
+head(my.data) # this will give you an overview of your data head()
+
+dim(my.data) # check the dimension 
+```
 ## 2. Commonly used functions in R
 
 | Commonly used functions in R  | Meaning                                    |
@@ -70,25 +74,25 @@ my.data
 - **Observed variables** are directly measured in the study wheras **latent variable** are *not* directly measured. However, we estimate latent variables from the observed variables in our study. 
 
 
-```{r two-plus-two3, exercise=TRUE}
+```{r two-plus-two3, exercise=TRUE, exercise.setup ="data"}
 str(my.data) # this function str() will provide information regarding the data (variable) type. 
 mode(my.data$age) # in order to look at the specific variable [dataset]$[varaible name]
 ```
 
-```{r mean_mode, exercise=TRUE}
+```{r mean_mode, exercise=TRUE, exercise.setup ="data"}
 # check the mean of the variable ``gpa_pre`` 
 
 ```
 
 ```{r mean_mode-solution}
-mean(my.data$gpa_pre)
+mean(my.data$gpa_pre) 
 ```
 
 ```{r mean_mode-check}
 grade_this_code()
 ```
 
-```{r mean_mode2, exercise=TRUE}
+```{r mean_mode2, exercise=TRUE, exercise.setup ="data"}
 # check the standard deviation of the variable ``creativity``
 
 ```
@@ -107,8 +111,14 @@ grade_this_code()
 - **Median**: The score which divides one variable's distribution in half 
 - **Mean **: The arithmetic average of one variable's values 
  $$ \bar{X} = \frac{\sum_{i = 1}^{N}x_i}{N} = \frac{x_1 +x_2+...+x_N}{N} $$
- 
-```{r mode, exercise=TRUE, echo=FALSE}
+
+```{r hist_mode, exercise=TRUE, echo=FALSE, exercise.setup="data"}
+hist(my.data$age) # visualize the distribution of the `age` variable 
+```
+
+```{r mode, exercise=TRUE, echo=FALSE, exercise.setup ="data"}
+# I defined a function to get mode and called this function `getmode` 
+# Let's see if this works with the variable `age` 
 
 getmode <- function(v) {
   uniqv <- unique(v)
@@ -116,42 +126,46 @@ getmode <- function(v) {
 }
 
 print(getmode(my.data$age))
-hist(my.data$age)
 ```
 
-```{r mean, exercise=TRUE, echo=FALSE}
-
+```{r mean, exercise=TRUE, echo=FALSE, exercise.setup ="data"}
+# Let's print the mean of the variable `gpa_pre` 
 print(mean(my.data$gpa_pre))
-hist(my.data$gpa_pre)
+
+hist(my.data$gpa_pre) # histogram 
 
 ```
 
+```{r median, exercise=TRUE, echo=FALSE, exercise.setup ="data"}
+# let's take a look at median this time. 
+x <- c(2,3,3,3,4,4,5,7,7,7,8,8,10,10,11,12,14,14,14) # first we defined a list 'x'
+print(median(x)) # print the median 
 
-```{r median, exercise=TRUE, echo=FALSE}
-x <- c(2,3,3,3,4,4,5,7,7,7,8,8,10,10,11,12,14,14,14)
-print(median(x))
+```
 
-print(median(my.data$age))
+```{r median2, exercise=TRUE, echo=FALSE, exercise.setup ="data"}
+# get median of the variable `age`
+
 
 ```
 
 ## 5. Spread
 It is often useful in statistics to utilize information about how much people deviate from the man of a variable. Let's talk about the difference in these distributions: **GPA_POST 1 vs. GPA-POST 2**
 
-```{r gpa, echo=FALSE}
+```{r gpa, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 hist(my.data$gpa_post, xlim=c(1,6), main="Histogram for GPA-Post 1 : Mean=2.81, sd=0.68")
 k = rtruncnorm(n=250, a=2.0, b =5.45, mean=2.81, sd= 0.20)
 hist(k, xlim=c(1,6), main="Histogram for GPA-Post 2: Mean=2.81, sd=0.20")
 ```
 
 - Univariate deviation scores: Sums of Squares (SS) 
-This indicates the **sum of each indivudal's squared deviation from the mean**
+This indicates the **sum of each individual's squared deviation from the mean**
  $$ SS = \sum_{i = 1}^{N}(x_i - \bar{X})^2 $$
 ---
 
 **[CLASS EXERCISE]**: Let's compute the Sum of Squares for *gpa_post*!
 
-```{r SS, echo=FALSE, exercise=TRUE}
+```{r SS, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 # first we will create a list that subtracts the mean from each data point of GPA-Post
 var1 = my.data$gpa_post - mean(my.data$gpa_post)
 hist(var1) # Did the distribution shape change? 
@@ -164,7 +178,7 @@ SS = sum(var2)
 print(SS)
 ```
 
-```{r SS2, echo=FALSE, exercise=TRUE}
+```{r SS2, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 # Compute the Sum of Squares for 'creativity'
 
 ```
@@ -193,7 +207,7 @@ grade_this_code()
 - We can also represent a person by a value that indicates how **far** she deviates from the mean of a variable.
  $$ \hat{z}_i = \frac{x_i- \bar{X}}{s_X} $$
  
-```{r Z_score, echo=FALSE, exercise=TRUE}
+```{r Z_score, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 # standard deviation of the variable *GPA-Post*
 sd(my.data$gpa_post)
 
@@ -303,7 +317,7 @@ $$ \hat{c}_{XY} = \frac{1}{N-1}\sum_{i=1}^{N}(x_i-\bar{X})(y_i-\bar{Y}) $$
 - Correlation is a standardized version of the covariance to evaluate the two variables' relationship (normalized covariance value). 
 
 $$ \hat{r}_{XY} = \frac{1}{N-1}\sum_{i=1}^{N}(\hat{z}_{X_i}\hat{z}_{Y_i}),\\ \hat{z}_i = \frac{x_i- \bar{X}}{s_X} $$
-```{r exercise2, echo=FALSE, exercise=TRUE}
+```{r exercise2, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 
 # Creating the plot
 plot(my.data$gpa_post, my.data$gpa_pre, pch = 19, col = "lightblue")
@@ -339,12 +353,20 @@ text(paste("Correlation:", round(cor(my.data$gpa_post, my.data$gpa_pre), 2)), x 
 
 **CLASS EXERCISE **
 
-![Zainudin et al. (2014)](https://www.researchgate.net/profile/Siwar-Chamhuri/publication/275530078/figure/tbl1/AS:613863351410722@1523367836730/Pearson-Correlation-Results.png){ width=75% }
 
-- Q1: Describe the direction and statistical significance of three of the correlation coefficients. 
-- Q2: Calculate R2 for each of the three correlations and interpret.
+![Zainudin et al. (2014) - Evaluating the role of Energy Efficiency Label on Customers' Purchasing Behaviour ](https://www.researchgate.net/profile/Siwar-Chamhuri/publication/275530078/figure/tbl1/AS:613863351410722@1523367836730/Pearson-Correlation-Results.png){ width=75% }
 
-```{r corr2, echo=FALSE, exercise=TRUE}
+-  $Y$ = Green purchasing behaviour
+
+  * Q1: Describe the direction and statistical significance of the correlation coefficients. 
+  * Q2: Calculate R2 for each of the correlations and interpret.
+  * Q3: Which of the following hypothesis could we reject or accept?
+    * H1: consumer knowledge is positively related to behaviour intention.
+    * H2: environmental awareness is positively related to behaviour intention.
+    * H3: attitudes toward energy efficient products are positively related to behaviour intention.
+    * H4: peer pressure will positively affect behavioural intention.
+    * H5: energy labelling will positively affect behaviour intention
+```{r corr2, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 
 
 ```
@@ -382,12 +404,11 @@ R has a built-in function for fitting linear regression models. The function ``l
 
 Let's fit a regression line with a DV: ``gpa_post`` and a IV: `gpa_pre`
 
-```{r regression11, echo=FALSE}
+```{r regression11, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 fit.reg <-lm(gpa_post ~ gpa_pre, my.data)
 ```
 
-```{r regression2, echo=FALSE, exercise=TRUE}
-fit.reg <-lm(gpa_post ~ gpa_pre, my.data)
+```{r regression2, echo=FALSE, exercise=TRUE, exercise.setup ="regression11"}
 
 summary(fit.reg)
 
@@ -395,7 +416,7 @@ assign("fit.reg", fit.reg, envir=globalenv()) # we will save and run
 ```
 
 Let's plot this! 
-```{r, plot1, echo=FALSE, exercise=TRUE}
+```{r, plot1, echo=FALSE, exercise=TRUE, exercise.setup ="data"}
 ggplot(my.data, aes(x = gpa_pre, y = gpa_post)) + 
   geom_point(alpha=0.7) +   
   geom_abline(slope = fit.reg$coefficients[[2]],
@@ -404,7 +425,7 @@ ggplot(my.data, aes(x = gpa_pre, y = gpa_post)) +
 
 ```
 
-```{r, plot2, echo=TRUE, exercise=TRUE}
+```{r, plot2, echo=TRUE, exercise=TRUE, exercise.setup ="data"}
 
 ggplot(my.data, aes(x = gpa_pre, y = gpa_post)) + 
   geom_point(alpha=0.7) +                           # observed data
@@ -457,7 +478,7 @@ question("The value of the correlation indicates the strength of the linear rela
 
 $$ [\hat{\beta_{i}}-1.96*s.e(\hat{\beta_{i}}), \hat{\beta_{i}}+1.96*s.e(\hat{\beta_{i}})] $$
 
-```{r, echo=FALSE}
+```{r, reg_final, echo=FALSE, exercise=TRUE, exercise.setup="regression11"}
 summary(fit.reg)
 confint(fit.reg)
 ```

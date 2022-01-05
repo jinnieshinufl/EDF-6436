@@ -40,6 +40,7 @@ We should also check whether the variables are normally distributed
 ```{r, normal, echo=FALSE, exercise=TRUE}
 data = cognition$vocab
 # Visually inspect whether the distribution is bell shaped.
+#library(ggpubr)
 ggdensity(data,
           main = "Density plot",
           xlab = str(data))
@@ -61,13 +62,11 @@ shapiro.test(data)
 The first step in an EFA procedure is to test whether your data is suitable for factor analysis. To this end, the EFAtools package provides the ``BARTLETT()`` and the ``KMO()`` functions. The Bartlett’s test of sphericity tests whether a correlation matrix is significantly different from an identity matrix (a correlation matrix with zero correlations between all variables). This test should thus be significant. The Kaiser-Meyer-Olkin criterion (KMO) represents the degree to which each observed variable is predicted by the other variables in the dataset and thus is another indicator for how correlated the different variables are.
 
 ```{r, assumption, echo=FALSE, exercise=TRUE}
-#library(EFAtools) #
-# Assumption 1: Data Sphericity 
-#### Bartlett's test of sphericity
+#library(EFAtools) 
+# Assumption 1: Data Sphericity - Bartlett's test of sphericity
 BARTLETT(cognition)
 
-# Assumption 2: Sampling Aqequacy 
-#### The Kaiser-Meyer-Olkin measure 
+# Assumption 2: Sampling Aqequacy - The Kaiser-Meyer-Olkin measure 
 KMO(cognition)
 
 ```
@@ -76,9 +75,9 @@ KMO(cognition)
 ```{r, corr, echo=FALSE, exercise=TRUE}
 correlations <- cor(cognition) 
 round(correlations, 3)
+
 library(corrplot)
 corrplot(correlations, method="number",type="lower")
-
 assign("correlations", correlations, envir=globalenv()) 
 ```
 
@@ -99,7 +98,13 @@ fa.parallel(cognition, fm = "ml")
 ```
 
 ## 5. Factor Analysis - continuous 
-Using the `fa()` function from the `psych` package, we can now specify a two factor solution. We will use the commonly adopted `promax` rotation (oblique) as factors tend to correlated most cases.  
+Using the `fa()` function from the `psych` package, we can now specify a two factor solution. We will use the commonly adopted `promax` rotation (oblique) as factors tend to correlated most cases.
+
+```{text}
+"Factoring method fm="minres" will do a minimum residual as will fm="uls". Both of these use a first derivative. fm="ols" differs very slightly from "minres" in that it minimizes the entire residual matrix using an OLS procedure but uses the empirical first derivative. This will be slower. fm="wls" will do a weighted least squares (WLS) solution, fm="gls" does a generalized weighted least squares (GLS), fm="pa" will do the principal factor solution, fm="ml" will do a maximum likelihood factor analysis. fm="minchi" will minimize the sample size weighted chi square when treating pairwise correlations with different number of subjects per pair. fm ="minrank" will do a minimum rank factor analysis. "old.min" will do minimal residual the way it was done prior to April, 2017 (see discussion below). fm="alpha" will do alpha factor analysis as described in Kaiser and Coffey (1965)"
+```
+
+
 ```{r, corr2, echo=TRUE, exercise=TRUE}
 one_factor <- fa(cognition, nfactors = 1, fm = "pa", rotate = "promax")
 

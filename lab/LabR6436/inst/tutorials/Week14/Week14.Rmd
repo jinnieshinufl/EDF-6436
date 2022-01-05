@@ -1,0 +1,253 @@
+---
+title: "Item Response Theory"
+author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
+date: "10/18/2021"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+#install.packages("ltm")
+library(ltm)
+library(learnr)
+library(questionr)
+library(corrplot)
+```
+
+## 1. Data 
+
+We will call the data (`Rasch_data.txt`) which includes 21 items answered by 200 students. 
+
+```{r, data, exercise=TRUE, echo=TRUE}
+data <- read.table("./data/Rasch_data.txt",header=FALSE,sep="")
+head(data)
+#Change the text file into matrix format that ltm can read
+data <- as.matrix(data[1:200,1:20])
+head(data)
+```
+
+## 2. Rasch Model 
+
+### Running a rasch model 
+
+```{r, rasch, exercise=TRUE, echo=FALSE, exercise.setup = "data"}
+
+#Running rasch model 
+#(the constraints are needed to hold all 
+# discrimination parameters to 1, which 
+# has to be true under the Rasch model)
+RaschModel <- rasch(data, constraint=cbind(ncol(data)+1,1))
+RaschModel
+```
+
+### Extracting estimated parameters 
+
+```{r param, exercise=TRUE, echo=FALSE,  exercise.setup = "rasch"}
+#Extracting estimated parameters
+item.pars <- coef(RaschModel)
+item.pars <- as.data.frame(item.pars)
+item.pars
+```
+
+### Getting ability level 
+
+```{r ability, exercise=TRUE, echo=FALSE,  exercise.setup = "param"}
+
+#Getting ability estimates associated with each response vector
+#(i.e., thetas are z values)
+fscores <- factor.scores(RaschModel)
+
+```
+
+### Plotting 
+
+```{r plot, exercise=TRUE, echo=FALSE , exercise.setup = "rasch"}
+
+#Plotting ICCs for all items
+plot(RaschModel, main="ICC from Rasch Model")
+
+```
+
+### Item Characteristic Curve 
+
+$$p = exp((theta - b)) / (1 + exp((theta - b)) )$$
+
+```{r, icc-value, exercise=TRUE, echo=FALSE, exercise.setup ="ability"}
+latent = fscores$score.dat$z1
+
+prob <- function(theta, b){
+  exp(1.7*(theta - b)) / (1 + exp(1.7*(theta - b)) )
+  
+}
+# the difficulty (b-param) of item 2 = 0.76944669
+prob(theta =4, b=0.76944669)
+  
+```
+
+#### Plotting ICC (item 2)
+
+```{r, cal, exercise=TRUE, echo=FALSE, exercise.setup ="icc-value"}
+p0 = prob(theta =-4, b=0.76944669)
+p1 = prob(theta =-3, b=0.76944669)
+p2 = prob(theta =-2, b=0.76944669)
+p3 = prob(theta =-1, b=0.76944669)
+p4 = prob(theta =0, b=0.76944669)
+p5 = prob(theta =1, b=0.76944669)
+p6 = prob(theta =2, b=0.76944669)
+p7 = prob(theta =3, b=0.76944669)
+p8 = prob(theta =4, b=0.76944669)
+
+plot(c(p0, p1, p2, p3, p4, p5, p6, p7, p8), 
+     x = c(-4, -3, -2, -1, 0, 1, 2, 3, 4), 
+     xlab = "Ability", ylab="Probability")
+
+```
+
+#### Plotting for a single item 
+
+```{r plot_one, exercise=TRUE, echo=FALSE,  exercise.setup = "rasch"}
+
+#Plotting ICC for a single item
+plot(RaschModel, items = c(2), main="ICC of Item 2")
+
+```
+
+### Item Information Function 
+$$p = \frac{\exp^{1.7*(\theta - b)}}{1 + \exp^{1.7*(\theta - b)}}$$
+$$ I(\theta) = p(1-p) $$
+
+```{r, iif, exercise=TRUE, echo=FALSE, exercise.setup ="ability"}
+
+info <- function(theta, b){
+  p = exp(1.7*(theta - b)) / (1 + exp(1.7*(theta - b)) )
+  p*(1-p)
+}
+
+b=0.76944669
+
+info0 = info(theta = -3, b=b)
+info1 = info(theta = -2, b=b)
+info2 = info(theta = -1, b=b)
+info3 = info(theta = 0, b=b)
+info4 = info(theta = 1, b=b)
+info5 = info(theta = 2, b=b)
+info6 = info(theta = 3, b=b)
+info7 = info(theta = 4, b=b)
+
+
+
+plot(c(info0, info1, info2, info3, info4, info5, info6, info7),
+     x = c(-4, -3, -2, -1, 0, 1, 2, 3),
+     xlab = "Ability", ylab="Information")
+```
+
+### Plotting Item and Test Information Curve (TCC)
+
+```{r icc, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+#Plotting TIC
+plot(RaschModel,  type=c("IIC"), main="Test Information Function")
+
+#Plotting ICC
+plot(RaschModel, items = c(2), type=c("IIC"), main="Item 2 Information Function")
+
+```
+
+```{r question, echo=FALSE}
+
+question('What is the information for this item at θ = -4?', 
+  answer("0.01", correct=TRUE), 
+  answer("0.001"), 
+  answer("0.0001"),
+  answer("0.00001"))
+```
+
+### Plotting Test Information Curve (ICC)
+
+```{r icc, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+#Plotting TCC
+plot(RaschModel,  type=c("IIC"), main="Item 2 Information Function")
+
+```
+
+### Item person map 
+```{r, item-person, exercise=TRUE, echo=FALSE, exercise.setup = "ability"}
+#Creating an item person map
+plot(fscores, include.items = TRUE, main ="Item Person Map under Rasch model")
+
+``` 
+
+### Assessing item fit
+
+null hypothesis is basically that observed data matches expected values
+(more on item fit next week; really this should be checked prior to interpreting
+all of the outputs above, such as difficulty estimates, ICCs, and TCC)
+
+```{r fit, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+item.fit(RaschModel,simulate.p.value = TRUE)
+```
+
+
+## 3. 2-PL and 3-PL 
+
+### Data
+
+Let's call the data (`2&3PL_data.txt`) which included a total of 3,000 students' responses on 20 dichotomously scored items. 
+
+```{r, data2, exercise=TRUE, echo=FALSE}
+
+temp <- read.table("./data/2&3PL_data.txt",header=FALSE,sep="")
+
+#Change the text file into matrix format that ltm can read
+data <- as.matrix(temp[1:3000,1:20])
+
+```
+
+### Running 2PL Model
+
+```{r, 2pl, exercise=TRUE, echo=FALSE, exercise.setup = "data2"}
+
+#Running 2-PL model
+two.pl.model <- ltm(data ~ z1)
+
+#Assessing item fit
+#null hypothesis is that observed data matches expected values
+item.fit(two.pl.model,simulate.p.value=TRUE)
+
+#Extracting estimated parameters
+item.pars.two.pl <- coef(two.pl.model)
+item.pars.two.pl <- as.data.frame(item.pars.two.pl)
+item.pars.two.pl
+
+#Plotting ICCs 
+plot(two.pl.model, main="ICC Curves under 2-PL Model")
+
+#Creating an item person map
+fscores <- factor.scores(two.pl.model)
+plot(fscores, include.items = TRUE, main ="Item Person Map under 2PL model")
+```
+
+### Running 3PL Model
+
+```{r, 3pl, exercise=TRUE, echo=FALSE, exercise.setup = "data2"}
+
+#Running 3PL model 
+three.pl.model <- tpm(data)
+
+#Assessing item fit
+#null hypothesis is that observed data matches expected values
+item.fit(three.pl.model, simulate.p.value=TRUE)
+
+#Extracting estimated parameters
+item.pars.three.pl <- coef(three.pl.model)
+item.pars.three.pl <- as.data.frame(item.pars.three.pl)
+item.pars.three.pl
+
+#Plotting ICCs
+plot(three.pl.model, main="ICC Curves under 3-PL Model")
+
+#Creating an item person map
+fscores <- factor.scores(three.pl.model)
+plot(fscores, include.items = TRUE, main ="Item Person Map under 3PL model")
+
+```
+
