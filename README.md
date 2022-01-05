@@ -47,7 +47,4 @@ For week 8: EFA
 learnr::run_tutorial("week8", package = "LabR6436")
 ```
 
-### Submission Report 
-At the end of each lab tutorial, students can download submission reports that describe what questions and exercises they attempted. 
-
 
