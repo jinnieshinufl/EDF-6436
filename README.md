@@ -5,8 +5,9 @@
 Welcome everyone! This is a repository for the lab materials provided in EDF 6436 - SPRING 2022
 
 
-You can copy and past this following code in R to run the lab tutorial 
+You can copy and past this following code in R to run the lab tutorial (You only need to run this part once!) 
 ```r
+install.packages(c('remotes', 'shiny'))
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 remotes::install_github("rstudio/learnr", force=TRUE)
 remotes::install_github("rstudio/gradethis", force=TRUE)
@@ -45,8 +46,5 @@ For week 8: EFA
 ```r
 learnr::run_tutorial("week8", package = "LabR6436")
 ```
-
-### Submission Report 
-At the end of each lab tutorial, students can download submission reports that describe what questions and exercises they attempted. 
 
 
