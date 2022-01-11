@@ -446,16 +446,6 @@ question("For every one unit increase in X, what is the expected change in Y?",
 )
 ```
 
-```{r letter-b, echo=FALSE}
-question("What is the predicted value of Y when X = 0?
-",
-  answer("4.494e-16", correct = TRUE),
-  answer("1.196e-01"),
-  answer("4.111e-02"),
-  answer("2.2e-16")
-)
-```
-
 ```{r letter-c, echo=FALSE}
 question("The test for correlation will lead to the same conclusion as the test for slope.",
   answer("True", correct = TRUE, message="The sign of the slope (i.e. negative or positive) will be the same for the correlation. In other words, both values indicate the direction of the relationship"),
