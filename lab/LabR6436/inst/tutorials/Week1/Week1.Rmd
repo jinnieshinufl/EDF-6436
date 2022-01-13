@@ -463,7 +463,9 @@ question("The value of the correlation indicates the strength of the linear rela
 ## 10. Regression (Continue)
 ### Standard Error (of the estimates)
 - Represents the average distance that the observed values fall from the regression line. 
-- the typical amount from which a statistic from a particular sample size deviates from its analogous parameter
+
+![](https://training-course-material.com/images/a/a8/ClipCapIt-140603-233044.PNG)
+
 - allows us to construct marginal confidence intervals for the estimate of that particular feature (e.g., 95% confidence)
 
 $$ [\hat{\beta_{i}}-1.96*s.e(\hat{\beta_{i}}), \hat{\beta_{i}}+1.96*s.e(\hat{\beta_{i}})] $$

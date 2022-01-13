@@ -105,3 +105,21 @@ question("What is the total test score of the examinee 11?",
 )
 ```
 
+Let's compute the average test score and compare it with the total item difficulty 
+```{r, data6, exercise=TRUE, echo=FALSE, exercise.lines=16, exercise.setup="source"}
+# 1. Average Test Score 
+###### YOUR CODE HERE #########
+ave_test_score = 
+################################
+
+# 2. Sum of all item difficulty
+###### YOUR CODE HERE #########
+sum_dif = 
+################################
+
+# 3. Check whether ave_test_score == sum_dif 
+###### YOUR CODE HERE #########
+
+################################
+
+```
