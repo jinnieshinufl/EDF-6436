@@ -103,35 +103,35 @@ Let's compute item discrimination for item 10 (i10)
 
 ```{r, IA1, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # Let's take a look at the data first and create a total score column 
-response$'total_score' = rowSums(response)
+response$'total_score' = 
 print(response)
 ```
 
 ```{r, IA11, echo=TRUE, exercise=TRUE, exercise.setup="IA1"} 
 # Now let's create a "corrected total score" and name the column `cr_total_score`
-response$'cr_total_score' = response$'total_score' - response$i10
+response$'cr_total_score' = 
 print(response)
 ```
 
 ```{r, IA12, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
 # Now we will compute the mean of the (corrected) total score for all participants (Mx)
-mx = colMeans(response['cr_total_score'])
+mx = 
 mx
 
 ```
 
 ```{r, IA13, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
 # Now we will compute the mean of the (corrected) total score for the participants who answered i10 ==1 (Mt)
-t_sample= subset(response, response$i10==1) # we will use the function called "subset"
+t_sample= subset () # we will use the function called "subset"
                                             # this function takes in the dataframe first, and the logic to parse the data 
-mt = colMeans(t_sample['cr_total_score'])
-mt
+mt = 
+
 
 ```
 
 ```{r, IA14, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
 # standard deviation of all participants based on their (corrected) total
-sd_x = sd(response$cr_total_score)
+sd_x = 
 
 ```
 
@@ -139,10 +139,11 @@ sd_x = sd(response$cr_total_score)
 # pbis?
 mx = 
 mt = 
-sd_t = 
-p =
+sd_x = 
+p = 
 q = 
-pbis = ((m1-mt)/sd_t)*(sqrt(p/q))
+pbis = ((mt-mx)/sd_x)*(sqrt(p/q))
+print(pbis)
 
 ```
 
