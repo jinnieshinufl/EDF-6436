@@ -31,7 +31,7 @@ print(CTTkey)
 ```
 
 ### Change the dataframe to dichotomous 
-```{r, score_data, echo=TRUE, execise.setup="data2"}
+```{r, score_data, echo=FALSE, exercise=TRUE, exercise.setup="data2"}
 
 data <- score(CTTdata,CTTkey, output.scored=TRUE)
 response <- as.data.frame(data$scored)
@@ -39,12 +39,7 @@ scores <- as.data.frame(data$score)
 
 head(scores) # this saves each student's total score 
 head(response) # this saves the item score (0 or 1)
-```
 
-### Test Score 
-Let's use `describe()` to look at the descriptive statistics of the `scores` data
-
-```{r, test, echo=FALSE, exercise=TRUE, execise.setup="score_data"}
 describe(scores)
 
 x <- scores$'data$score'
@@ -58,9 +53,16 @@ abline(v = mean(x), col = "red", lwd = 2)
 ## 2. Item Difficulty 
 
 Now we have a new data frame called `response` which stores the dichotomous item scores
-```{r, response_data, echo=TRUE, exercise.setup="score_data"} 
+```{r,  e12, echo=FALSE, exercise=TRUE, exercise.setup="score_data"}
 head(response)
 ```
+
+### Item Analysis 
+Now you pilot tested these MC items, our task is to quanitfy the "quality" of the items.
+- How well can it tell apart the students based on their ability level?
+- How hard or easy is the item? 
+
+We will use the item statistics we learned in CTT 
 
 ### Item Difficulty (P value)
 
@@ -77,8 +79,6 @@ pj = # compute the p values
 ```{r, answer1-solution}
 # Let's compute the p-value first 
 pj = colMeans(response) 
-
-assign("pj", pj, envir=globalenv()) 
 ```
 
 ```{r, answer1-check}
@@ -99,20 +99,53 @@ $$ \rho_{pbis} = [\frac{\mu_{+}-\mu_{X}}{\sigma_{X}}](\sqrt\frac{p}{q})$$
 $$ d_{j} = \frac{\sum_{i=1}^{N}(X_{ij}-p_{j})(X_{C_{i}} - \mu_{X_{c}})}{\sqrt{\sum_{i=1}^{N}(X_{ij}-p_{j})^2\sum_{i=1}^{N}{(X_{C{i}}-\mu_{X_{c}})^2}}} $$ 
 
 ### Item Analysis ``itemAnalysis()``
-
+Let's compute item discrimination for item 10 (i10)
 
 ```{r, IA1, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
-# Let's compute item discrimination for item 10 (i10):
-corrected_data = subset(response, response$i10==1)
-
-m1 = mean(rowSums(subset(corrected_data, select = -c(i10) )))
-mt = mean(rowSums(subset(response, select = -c(i10) )))
-sd_t = sd(rowSums(subset(response, select = -c(i10) )))
-p = sum(response$i10)/100
-q = 1- p
-
-pbis = ((m1-mt)/sd_t)*(sqrt(p/q))
+# Let's take a look at the data first and create a total score column 
+response$'total_score' = rowSums(response)
+print(response)
 ```
+
+```{r, IA11, echo=TRUE, exercise=TRUE, exercise.setup="IA1"} 
+# Now let's create a "corrected total score" and name the column `cr_total_score`
+response$'cr_total_score' = response$'total_score' - response$i10
+print(response)
+```
+
+```{r, IA12, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
+# Now we will compute the mean of the (corrected) total score for all participants (Mx)
+mx = colMeans(response['cr_total_score'])
+mx
+
+```
+
+```{r, IA13, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
+# Now we will compute the mean of the (corrected) total score for the participants who answered i10 ==1 (Mt)
+t_sample= subset(response, response$i10==1) # we will use the function called "subset"
+                                            # this function takes in the dataframe first, and the logic to parse the data 
+mt = colMeans(t_sample['cr_total_score'])
+mt
+
+```
+
+```{r, IA14, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
+# standard deviation of all participants based on their (corrected) total
+sd_x = sd(response$cr_total_score)
+
+```
+
+```{r, IA15, echo=TRUE, exercise=TRUE} 
+# pbis?
+mx = 
+mt = 
+sd_t = 
+p =
+q = 
+pbis = ((m1-mt)/sd_t)*(sqrt(p/q))
+
+```
+
 
 ```{r, IA, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # point biserial 
