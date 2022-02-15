@@ -14,12 +14,14 @@ library(hemp)
 library(stringr)
 library(Hmisc)
 library(reshape2)
+library(surveydata)
+library(dplyr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## 1. Data
 ### `ehd` dataset from the `psy` package 
-A data frame with 269 observations with 20 items on the depression mood scale. https://rdrr.io/cran/psy/man/ehd.html
+269 observations with 20 items on the depression mood scale, `interest` https://rdrr.io/cran/psy/man/ehd.html
 
 ```{r, echo=FALSE}
 data(interest)
@@ -46,6 +48,25 @@ assign("my.data", my.data, envir=globalenv()) # we will save and run this datase
 head(interest)
 ```
 
+### Let's check the dimension 
+```{r, q23, exercise=TRUE}
+
+
+```
+
+### Descriptive Statistics 
+```{r, q24, exercise=TRUE}
+
+
+```
+
+### Test Score Histogram - `reading`, `sentcomp`, `mathmtcs`
+
+```{r, q25, exercise=TRUE}
+
+
+```
+
 ## 2. Content Validity 
 
 A common form of validity evidence is expert opin-
@@ -54,6 +75,7 @@ ion. The opinions of experts can help comment on the appropriateness of the cont
 $$ CVR = \frac{n_{e}-(N/2)}{N/2} $$ 
 
 - $n_{e}$ represent the number of experts who deem the item as essential and $N$ is the total number of experts.
+
 - If we ask 20 experts if they think this item is
 essential to measuring aggression in children and 17 agree it is, then the CVR can be calculated as: 
 
@@ -64,7 +86,7 @@ essential to measuring aggression in children and 17 agree it is, then the CVR c
 
 ## 3. Criterion-referenced Validity 
 
-we would ex- pect that the vocabulary test (vocab) would be correlated with assessments that measure reading comprehension (reading) and sentence completion (sent- comp). Thus, we can use the `cor` function to calculate the Pearson correlation between these variables
+we would expect that the vocabulary test (vocab) would be correlated with assessments that measure reading comprehension (reading) and sentence completion (sentcomp). Thus, we can use the `cor` function to calculate the Pearson correlation between these variables
 
 ```{r, cor, exercise=TRUE, ech=FALSE}
 cor(interest[, c("vocab", "reading", "sentcomp")])
@@ -189,3 +211,80 @@ question("Which of the following component identify the reliability of the scale
   answer("(D)", correct=TRUE)
 )
 ```
+
+
+## 5. Survey data analysis 
+
+### 1. Data - member satisfaction survey, `survey`.
+
+```{r data2, exercise=TRUE, exercise.lines=10}
+# 1. Attach the two libraries  'surveydata', 'dplyr'
+
+
+
+# 2. data 
+
+survey <- membersurvey %>% as.tbl()
+```
+
+### 2. Descriptive analysis 
+
+```{r data3, exercise=TRUE, exercise.lines=5, exercise.setup="data2"}
+# 3. Descriptive analysis 
+### overview the data 
+
+
+```
+
+```{r data4, exercise=TRUE, exercise.lines=5, exercise.setup="data2"}
+# 4. Descriptive statistics 
+### overview the data 
+
+
+```
+
+### 3. Subselecting the data and recoding 
+
+```{r data5, exercise=TRUE, exercise.lines=12, exercise.setup="data2"}
+### select the columns with the binary responses yes/no (Q3_1 ~ Q3_15)
+
+### Let's call the subselected data => survey_short
+survey_short = survey[, 5:19]
+
+### recoding the data 
+
+
+
+```
+
+### 4. Item Analysis 
+
+```{r data6, exercise=TRUE, exercise.lines=15, exercise.setup="data5"}
+### item mean 
+
+
+
+
+
+### item variance 
+
+
+
+
+### Total Score 
+
+
+
+```
+
+```{r data7, exercise=TRUE, exercise.lines=15, exercise.setup="data5"}
+### Internal consistency 
+
+
+
+
+
+
+
+```
+

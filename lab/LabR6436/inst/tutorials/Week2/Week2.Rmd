@@ -168,7 +168,7 @@ sum_dif =
 ## 5. Exercise 
 
 #### 1. Most difficult and least difficult items 
-```{r, ex1, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex1, exercise=TRUE, echo=FALSE, exercise.lines=6, exercise.setup="source"}
 
 
 
@@ -177,7 +177,7 @@ sum_dif =
 
 #### 2. Item with the highest variance and lowest variance 
 
-```{r, ex2, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex2, exercise=TRUE, echo=FALSE, exercise.lines=8, exercise.setup="source"}
 
 
 
@@ -185,7 +185,7 @@ sum_dif =
 ```
 
 #### 3. Inter-item correlation between the items from Q1
-```{r, ex3, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex3, exercise=TRUE, echo=FALSE, exercise.lines=15, exercise.setup="source"}
 
 
 
@@ -193,7 +193,7 @@ sum_dif =
 ```
 
 #### 4. Inter-item correlation between the items from Q2
-```{r, ex4, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex4, exercise=TRUE, echo=FALSE, exercise.lines=15, exercise.setup="source"}
 
 
 
@@ -201,7 +201,7 @@ sum_dif =
 ```
 
 #### 5. Total score histogram 
-```{r, ex5, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex5, exercise=TRUE, echo=FALSE, exercise.lines=8, exercise.setup="source"}
 
 
 
@@ -209,7 +209,7 @@ sum_dif =
 ```
 
 #### 5. Total score to z-score and histogram 
-```{r, ex6, exercise=TRUE, echo=FALSE, exercise.lines=4, exercise.setup="source"}
+```{r, ex6, exercise=TRUE, echo=FALSE, exercise.lines=5, exercise.setup="source"}
 
 
 
