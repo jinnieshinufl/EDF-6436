@@ -36,13 +36,13 @@ learnr::run_tutorial("week4", package = "LabR6436")
 For week 5: Reliability 
 
 ```r
-install.packages(c('hemp', 'stringr','Hmisc', 'reshape2', 'surveydata', 'dplyr'))
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 learnr::run_tutorial("week5", package = "LabR6436")
 ```
 For week 7: Validity
 
 ```r
+install.packages(c('hemp', 'stringr','Hmisc', 'reshape2', 'surveydata', 'dplyr'))
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 learnr::run_tutorial("week7", package = "LabR6436")
 ```
