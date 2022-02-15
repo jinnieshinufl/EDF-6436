@@ -7,6 +7,7 @@ runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
+#install.packages(c('hemp', 'stringr','Hmisc', 'reshape2', 'surveydata', 'dplyr'))
 library(learnr)
 library(truncnorm)
 library(ggplot2)
