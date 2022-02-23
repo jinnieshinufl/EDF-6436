@@ -11,60 +11,67 @@ library(learnr)
 library(questionr)
 library(corrplot)
 library(psych)
-library(ggpubr)
 library(EFAtools)
 ```
 
 ## 1. Cognition Data 
-The cognition data set includes measures of vocabulary (vocab), reading comprehension (reading), sentence completion (sentcomp), mathematics (mathmtcs), geometry (geometry), and analytical reasoning (analyrea).
+The `cognition` data set includes measures of vocabulary (vocab), reading comprehension (reading), sentence completion (sentcomp), mathematics (mathmtcs), geometry (geometry), and analytical reasoning (analyrea).
 
-```{r print-limit-hint}
-#cognition <- subset(interest, select = vocab:analyrea)
-#head(cognition)
-#assign("cognition", cognition, envir=globalenv()) 
+```{r source}
+load('interest.RData')
+cognition <- subset(interest, select = vocab:analyrea)
+head(cognition)
+assign("cognition", cognition, envir=globalenv()) 
 
 ```
 
 ### Descriptive statistics of the data
 Looking at the descriptive statistics, it appears that the variables may have been standardized (indicated by the means of the variables being ap- proximately zero and the variances being approximately one). 
 
-```{r, score_data, echo=TRUE}
-#summary(cognition)
-#apply(cognition, 2, var)
+```{r, score_data, exercise=TRUE, echo=TRUE}
+# Descriptive analysis - summary table 
+
 ```
 
+### Assumption checking 1 - Normality 
 We should also check whether the variables are normally distributed 
-```{r, normal, echo=FALSE, exercise=TRUE}
-data = cognition$vocab
+```{r, normal, echo=FALSE, exercise=TRUE, exercise.lines=13}
 # Visually inspect whether the distribution is bell shaped.
-#library(ggpubr)
-ggdensity(data,
-          main = "Density plot",
-          xlab = str(data))
-```
+### 1. histogram (column='vocab')
 
-Q-Q Plot 
-```{r, normal2, echo=FALSE, exercise=TRUE}
-data = cognition$vocab
-ggqqplot(data)
+
+
+
+
+### 2. density plot (column = 'vocab')
 
 ```
 
-```{r, norm3, exercise=TRUE, echo=FALSE}
-data = cognition$vocab
-shapiro.test(data)
+#### Q-Q Plot 
+```{r, normal2, echo=FALSE, exercise=TRUE, exercise.lines=5}
+### 3. qq-plot (column='vocab')
+
+
+```
+
+#### Shapiro-Wilk Test 
+H0 = the population is distributed normally.
+```{r, norm3, exercise=TRUE, echo=FALSE ,exercise.lines=5}
+### 4. Shapiro-Wilk Test  (column='vocab')
+
+#shapiro.test()
 ```
 
 ## 2. Assumption Checking 
-The first step in an EFA procedure is to test whether your data is suitable for factor analysis. To this end, the EFAtools package provides the ``BARTLETT()`` and the ``KMO()`` functions. The Bartlett’s test of sphericity tests whether a correlation matrix is significantly different from an identity matrix (a correlation matrix with zero correlations between all variables). This test should thus be significant. The Kaiser-Meyer-Olkin criterion (KMO) represents the degree to which each observed variable is predicted by the other variables in the dataset and thus is another indicator for how correlated the different variables are.
+The first step in an EFA procedure is to test whether your data is suitable for factor analysis. To this end, the **EFAtools package** provides the ``BARTLETT()`` and the ``KMO()`` functions. The Bartlett’s test of sphericity tests whether a correlation matrix is significantly different from an identity matrix (a correlation matrix with zero correlations between all variables). This test should thus be significant. The Kaiser-Meyer-Olkin criterion (KMO) represents the degree to which each observed variable is predicted by the other variables in the dataset and thus is another indicator for how correlated the different variables are.
 
 ```{r, assumption, echo=FALSE, exercise=TRUE}
-#library(EFAtools) 
+
 # Assumption 1: Data Sphericity - Bartlett's test of sphericity
-BARTLETT(cognition)
+BARTLETT(cognition) # from EFATools 
 
 # Assumption 2: Sampling Aqequacy - The Kaiser-Meyer-Olkin measure 
-KMO(cognition)
+KMO(cognition) # from EFATools 
 
 ```
 
@@ -73,7 +80,7 @@ KMO(cognition)
 correlations <- cor(cognition) 
 round(correlations, 3)
 
-library(corrplot)
+library(corrplot) #correlation plot 
 corrplot(correlations, method="number",type="lower")
 assign("correlations", correlations, envir=globalenv()) 
 ```
@@ -82,16 +89,22 @@ assign("correlations", correlations, envir=globalenv())
 ```{r, corr3, echo=FALSE, exercise=TRUE}
 
 #### 1. K1 Method
+# Let's do eigenvalue decomposition using the function `eigen()` => default 
+eigen_decomp <- 
 
-eigen_decomp <- eigen(correlations) 
-round(eigen_decomp$values, 3)
+print(eigen_decomp)
+```
 
+```{r,scree, echo=FALSE, exercise=TRUE }
 ### 2. Scree plot (elbow method)
 
-lattice_scree(cognition)
+scree(cognition) #from the psych package
 
+```
+
+```{r, para, echo=FALSE, exercise=TRUE}
 ### 3. Parallel analysis 
-fa.parallel(cognition, fm = "ml")
+fa.parallel(cognition, fm = "ml") #from the psych package 
 ```
 
 ## 5. Factor Analysis - continuous 
@@ -101,14 +114,24 @@ Using the `fa()` function from the `psych` package, we can now specify a two fac
 "Factoring method fm="minres" will do a minimum residual as will fm="uls". Both of these use a first derivative. fm="ols" differs very slightly from "minres" in that it minimizes the entire residual matrix using an OLS procedure but uses the empirical first derivative. This will be slower. fm="wls" will do a weighted least squares (WLS) solution, fm="gls" does a generalized weighted least squares (GLS), fm="pa" will do the principal factor solution, fm="ml" will do a maximum likelihood factor analysis. fm="minchi" will minimize the sample size weighted chi square when treating pairwise correlations with different number of subjects per pair. fm ="minrank" will do a minimum rank factor analysis. "old.min" will do minimal residual the way it was done prior to April, 2017 (see discussion below). fm="alpha" will do alpha factor analysis as described in Kaiser and Coffey (1965)"
 ```
 
+```{r, help, echo=TRUE, exercise=TRUE}
 
-```{r, corr2, echo=TRUE, exercise=TRUE}
-one_factor <- fa(cognition, nfactors = 1, fm = "pa", rotate = "promax")
-
-one_factor 
-
-assign("one_factor", one_factor, envir=globalenv()) 
 ```
+
+```{r, corr2, echo=TRUE, exercise=TRUE, exercise.lines=13}
+# Factor analysis using the psych package -> `fa()`
+one_factor <- fa(cognition,  # data
+                 nfactors = 1, # number of factors 
+                 fm = "pa",  # method = 
+                 rotate = "promax") # rotation 
+
+
+one_factor # call the results 
+
+
+assign("one_factor", one_factor, envir=globalenv()) # this is just to connect the chunks
+```
+
 We can prepare this output so it is more readable. For instance, we can ask that the loadings that do not exceed a cut-off value, such as .32, be excluded from the printout.
 
 ```{r, result, exercise=TRUE, echo=FALSE}
@@ -124,10 +147,22 @@ fa.diagram(one_factor, digits = 2, main = "Factor Diagram",
 
 ```
 
+### Factor score 
+```{r,fscores, exercise=TRUE, echo=FALSE}
+#factor.scores()
+
+```
+
 ### Exercise 
 Let's try to run the two factor model 
 ```{r, two_factor, exercise=TRUE, echo=FALSE, exercise.lines= 15}
+# run the two factor model and call it `two_factor` 
+# hint: a more flexible rotation? 
 
+
+
+
+# print the two factor model results with the cut-off score of .30
 
 ```
 
@@ -144,7 +179,7 @@ We could sometimes have ordinal data collected (e.g., rating scale). We will use
 | Q2  | If I am feeling depressed, I can usually cheer myself up with humor.                                                       |
 | Q3  | If someone makes a mistake, I will often tease them about it.                                                              |
 | Q4  | I let people laugh at me or make fun at my expense more than I should.                                                     |
-| Q5  | I don't have to work very hard at making other people laugh�I seem to be a naturally humorous person.                      |
+| Q5  | I don't have to work very hard at making other people laugh. I seem to be a naturally humorous person.                      |
 | Q6  | Even when I'm by myself, I'm often amused by the absurdities of life                                                       |
 | Q7  | People are never offended or hurt by my sense of humor.                                                                    |
 | Q8  | I will often get carried away in putting myself down if it makes my family or friends laugh.                               |
@@ -156,16 +191,30 @@ We could sometimes have ordinal data collected (e.g., rating scale). We will use
 ```{r}
 url <- "https://assets.datacamp.com/production/course_4249/datasets/humor_dataset.csv"
 data <- read.csv(url, sep = ";")
-assign("data", data, envir=globalenv()) 
+assign("data", data, envir=globalenv())  # This is just to connect the chunks 
 ```
 
-```{r, gl, exercise=TRUE, echo=FALSE}
-datF <- data.frame(lapply(data, ordered))
-summary(datF)
+
+```{r, gl, exercise=TRUE, echo=FALSE, exercise.lines=9}
+data <- data.frame(lapply(data, ordered)) 
+
+# data overview 
+
+# summary statistics
+
 
 ```
 
+### Data cleaning 
+Anything you noticed? 
+```{r clean, exercise=TRUE, exercise.lines=8}
+# recoding 
+
+
+
+```
 #### Correlation Matrix 
+
 For the factor analysis, because our data are ordered categorical and not continuous, we should use the a polychoric matrix instead of the raw values. 
 We can directly specify this in the `fa()` function using the `cor = "poly"` argument.
 
@@ -174,8 +223,8 @@ temp   <- fa(data[,1:32],
             fm       = "pa", 
             rotate   = "promax",
             cor      = "poly")
-n_p    <- nrow(data)
-R_poly <- temp$r
+
+R_poly <- temp$r # R = polychoric matrix 
 
 assign("R_poly", R_poly, envir=globalenv())
 ```
@@ -198,7 +247,7 @@ round(eigen_decomp$values, 3)
 
 ### 2. Scree plot (elbow method)
 
-lattice_scree(R_poly)
+scree(R_poly)
 
 ### 3. Parallel analysis 
 fa.parallel(R_poly, fm = "ml")
@@ -215,10 +264,9 @@ print(fafit, cut = .32, sort = TRUE, digits = 3)
 assign("fafit", fafit, envir=globalenv())
 ```
 
-#### Pattern Matrix 
+#### Pattern Matrix - Factor loading 
 ```{r, pattern, exercise=TRUE, echo=FALSE}
 PattM   <- fafit$loadings[1:4,]
-StructM <- fafit$Structure[1:4,]
 
 print(PattM)
 ```
@@ -226,8 +274,8 @@ print(PattM)
 #### Factor Score 
 When we have a raw data set, for example with each row representing a person, we can estimate those persons’ factor scores.
 ```{r fs, exercise=TRUE, echo=FALSE}
-Factor_scores <- factor.scores(data[,1:32], fafit)$scores
-head(Factor_scores)
+Factor_scores <- factor.scores(data[,1:32], fafit)
+Factor_scores 
 ``` 
 
 ### Factor Digram 
