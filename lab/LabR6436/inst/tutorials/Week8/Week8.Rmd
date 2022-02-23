@@ -22,9 +22,9 @@ library(EFAtools)
 The cognition data set includes measures of vocabulary (vocab), reading comprehension (reading), sentence completion (sentcomp), mathematics (mathmtcs), geometry (geometry), and analytical reasoning (analyrea).
 
 ```{r print-limit-hint}
-cognition <- subset(interest, select = vocab:analyrea)
-head(cognition)
-assign("cognition", cognition, envir=globalenv()) 
+#cognition <- subset(interest, select = vocab:analyrea)
+#head(cognition)
+#assign("cognition", cognition, envir=globalenv()) 
 
 ```
 
@@ -32,8 +32,8 @@ assign("cognition", cognition, envir=globalenv())
 Looking at the descriptive statistics, it appears that the variables may have been standardized (indicated by the means of the variables being ap- proximately zero and the variances being approximately one). 
 
 ```{r, score_data, echo=TRUE}
-summary(cognition)
-apply(cognition, 2, var)
+#summary(cognition)
+#apply(cognition, 2, var)
 ```
 
 We should also check whether the variables are normally distributed 
