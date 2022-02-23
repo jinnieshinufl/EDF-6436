@@ -7,9 +7,6 @@ runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-#install.packages("remotes")
-#remotes::install_github("cddesja/hemp")
-#library("hemp")
 library(learnr)
 library(questionr)
 library(corrplot)
