@@ -468,3 +468,22 @@ question("The value of the correlation indicates the strength of the linear rela
   answer("False")
 )
 ```
+<<<<<<< HEAD
+=======
+
+## 10. Regression (Continue)
+### Standard Error (of the estimates)
+- Represents the average distance that the observed values fall from the regression line. 
+
+![](https://training-course-material.com/images/a/a8/ClipCapIt-140603-233044.PNG)
+
+- allows us to construct marginal confidence intervals for the estimate of that particular feature (e.g., 95% confidence)
+
+$$ [\hat{\beta_{i}}-1.96*s.e(\hat{\beta_{i}}), \hat{\beta_{i}}+1.96*s.e(\hat{\beta_{i}})] $$
+
+```{r, reg_final, echo=FALSE, exercise=TRUE, exercise.setup="regression11"}
+summary(fit.reg)
+confint(fit.reg)
+```
+
+>>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230

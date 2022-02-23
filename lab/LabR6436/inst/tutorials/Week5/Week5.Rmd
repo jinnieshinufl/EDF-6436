@@ -214,7 +214,7 @@ reliability(data, itemal=TRUE)
 If we know the mean and variance of the observed scores on a test, as well as the reported reliability, we can estimate a confidence interval around an estimated true score. Let’s use Alba’s predicted true score.
 
 
-```{r ci, exercise=TRUE, echo=FALSE}
+```{r ci, exercise=TRUE, echo=FALSE, exercise.lines=30}
 rel <- 
 SEM <- 
 VarX <- 
