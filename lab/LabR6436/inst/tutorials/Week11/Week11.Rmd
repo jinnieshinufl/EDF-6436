@@ -1,5 +1,5 @@
 ---
-title: "Explaratory Factor Analysis"
+title: "Confirmatory Factor Analysis"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
 date: "10/18/2021"
 output: learnr::tutorial
