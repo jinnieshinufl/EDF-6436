@@ -15,6 +15,7 @@ library(corrplot)
 
 ## 1. Data 
 We will use the `lavaan` package (Rosseel et al., 2020) for estimating confirmatory factor analysis models. 
+
 - We will use the Holzinger and Swineford Dataset, which you can read more about with `?HolzingerSwineford1939`
 
 ```{r print-limit-hint}
