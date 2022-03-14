@@ -31,7 +31,11 @@ print(CTTkey)
 ```
 
 ### Change the dataframe to dichotomous 
+<<<<<<< HEAD
+```{r, score_data, echo=TRUE, exercise=TRUE, execise.setup="data2"}
+=======
 ```{r, score_data, echo=FALSE, exercise=TRUE, exercise.setup="data2"}
+>>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 
 data <- score(CTTdata,CTTkey, output.scored=TRUE)
 response <- as.data.frame(data$scored)
@@ -40,6 +44,10 @@ scores <- as.data.frame(data$score)
 head(scores) # this saves each student's total score 
 head(response) # this saves the item score (0 or 1)
 
+<<<<<<< HEAD
+```{r, test2, exercise=TRUE, echo=TRUE, exercise.setup="score_data"} 
+=======
+>>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 describe(scores)
 
 x <- scores$'data$score'
@@ -53,7 +61,11 @@ abline(v = mean(x), col = "red", lwd = 2)
 ## 2. Item Difficulty 
 
 Now we have a new data frame called `response` which stores the dichotomous item scores
+<<<<<<< HEAD
+```{r, response_data, exercise=TRUE, echo=TRUE, exercise.setup="score_data"} 
+=======
 ```{r,  e12, echo=FALSE, exercise=TRUE, exercise.setup="score_data"}
+>>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 head(response)
 ```
 
@@ -98,6 +110,61 @@ $$ \rho_{pbis} = [\frac{\mu_{+}-\mu_{X}}{\sigma_{X}}](\sqrt\frac{p}{q})$$
 - Spearman’s rho correlation:
 $$ d_{j} = \frac{\sum_{i=1}^{N}(X_{ij}-p_{j})(X_{C_{i}} - \mu_{X_{c}})}{\sqrt{\sum_{i=1}^{N}(X_{ij}-p_{j})^2\sum_{i=1}^{N}{(X_{C{i}}-\mu_{X_{c}})^2}}} $$ 
 
+<<<<<<< HEAD
+
+#### Let's compute the CITC score for `i10`
+
+```{r, IA1, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
+# Step 1: we will need to create a column with the corrected total score stored 
+
+response['total'] = rowSums(response)
+response['total_corrected'] = response['total'] - response[c("i10")]
+print(response$total_corrected)
+print(response$total)
+
+```
+
+```{r, IA11, echo=TRUE, exercise=TRUE, exercise.setup="IA1"} 
+# Step 2: subset the data so that we only have the students who answered i10 ==1
+subset_correct = response[response["i10"] ==1, ]
+
+```
+
+```{r, IA12, echo=TRUE, exercise=TRUE, exercise.setup="IA11"} 
+# Step 3: get the mean of the total score of the students who answered i10 ==1
+mt = mean(subset_correct$'total_corrected')
+```
+
+```{r, IA13, echo=TRUE, exercise=TRUE, exercise.setup="IA1"} 
+# Step 4: get the mean of the total score of all students 
+mx = mean(response$'total_corrected')
+```
+
+```{r, IA14, echo=TRUE, exercise=TRUE, exercise.setup="IA1"} 
+# Step 4: get the standard deviation of the total score of all students 
+sd_x = 
+``` 
+
+```{r, IA15, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
+# Step 5: p-value 
+p = sum(response$i10)/100
+q = 1- p
+``` 
+
+```{r, IA16, echo=TRUE, exercise=TRUE} 
+# Step 6: let's get the final pbis value! :-) 
+mx = 
+mt = 
+sd_t = 
+p =
+q = 
+
+pbis = 
+((mx-mt)/sd_t)*(sqrt(p/q))
+```
+
+### Item Analysis ``itemAnalysis()``
+=======
 ### Item Analysis ``itemAnalysis()``
 Let's compute item discrimination for item 10 (i10)
 
@@ -147,6 +214,7 @@ print(pbis)
 
 ```
 
+>>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 
 ```{r, IA, echo=TRUE, exercise=TRUE, exercise.setup="score_data"} 
 # point biserial 
