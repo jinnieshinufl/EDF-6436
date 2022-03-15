@@ -49,14 +49,15 @@ round(multi_out2,3)
 ```
 
 ```{text}
-Both skewness and kurtosis are very high, pointing to multivariate outliers that might inflate standard errors of coefficients (coefficients themselves are mostly unaffected by non-normality).
+Both skewness and kurtosis are very high, pointing to multivariate outliers that might inflate 
+standard errors of coefficients (coefficients themselves are mostly unaffected by non-normality).
 ```
 
 #### EXERCISE 
 ```{r question, echo=FALSE}
 question("which of the following statement is true? (Select all)",
          answer("The violation informs our estimation model selection", correct=TRUE), 
-         answer("We might need to revmove the outliers ", correct=TRUE),
+         answer("We might need to remove the outliers ", correct=TRUE),
          answer("The violation is minimal so we can proceed as is"),
          answer("We should report this result as it has implciations on the confidence in interperting the results", correct=TRUE)
 )
@@ -64,6 +65,7 @@ question("which of the following statement is true? (Select all)",
 
 ## 3. Case 1 - CFA specificaiton
 Instead of using maximum likelihood estimation, we can use a robust estimation approach, specifically the “maximum likelihood robust” (MLR) method. 
+- Adjustment: Chi-squared (and associated fit statistics that use it: RMSEA, CFI, TLI)
 
 We will first specify the model using the `lavaan` package.
 
@@ -82,7 +84,7 @@ model <- "VISUAL =~ x1 + x2 + x3
 
 Once we specified and saved our model to `model`, we can fit the model using the `cfa()` function. We will use the `estimator="MLR"`to specify the robust maximum likelihood estimation method. We can use the `mimic = "Mplus"` argument if we wish to acquire output that is similar to what it would be if we were to use Mplus software.
 
-```{r, cfa1, exercise=TRUE, echo=FALSE}
+```{r, cfa1, exercise=TRUE, echo=FALSE, exercise.setup= 'case1'}
 
 cfa_fit1 <- cfa(model, 
                 data = dat,
@@ -93,7 +95,7 @@ cfa_fit1 <- cfa(model,
 
 Let's take a look at the model fit together
 
-```{r cfa1-result, exercise=TRUE, echo=FALSE}
+```{r cfa1-result, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 summary(cfa_fit1, 
         fit.measures = TRUE, 
         standardized = TRUE, 
@@ -101,8 +103,21 @@ summary(cfa_fit1,
 ```
 
 ## 4. Case 1 - Model Evaluation 
+### Model fit indices 
 
-```{r, cfa1-fit, exercise=TRUE, echo=TRUE}
+- Each fit index answers a different question about model fit \ 
+- CFI/TLI, SRMR, RMSEA, Chi-square ....
+
+#### Explanations
+- **Chi-squared**: Assess the overall fit and the discrepancy between the sample and fitted covariance matrices. Its p-value should be > .05 (i.e., the hypothesis of a perfect fit cannot be rejected). However, it is quite sensitive to sample size.
+
+- **CFI**: The Comparative Fit Index is a revised form of NFI. Not very sensitive to sample size (Fan, Thompson, & Wang, 1999). Compares the fit of a target model to the fit of an independent, or null, model. It should be > .90.
+
+- **RMSEA** : The Root Mean Square Error of Approximation is a parsimony-adjusted index. Values closer to 0 represent a good fit. It should be < .08 or < .05. The p-value printed with it tests the hypothesis that RMSEA is less than or equal to .05 (a cutoff sometimes used for good fit), and thus should be not significant.
+
+- **SRMR**: the (Standardized) Root Mean Square Residual represents the square-root of the difference between the residuals of the sample covariance matrix and the hypothesized model. As the RMR can be sometimes hard to interpret, better to use SRMR. Should be < .08.
+
+```{r, cfa1-fit, exercise=TRUE, echo=TRUE, exercise.setup= 'cfa1'}
 fit_stats <- fitMeasures(cfa_fit1, c("chisq.scaled","df.scaled", "pvalue.scaled", 
                                     "cfi.robust", 
                                     "tli.robust", 
@@ -112,38 +127,46 @@ fit_stats
 ``` 
 ---
 ### Futhre insepction: model's covariance matrix 
-```{r, cfa1-fit2, exercise=TRUE, echo=FALSE}
+
+- `fitted()` : model-implied (fitted) covariance matrix (and mean vector) of a fitted model [`library(lavaan)`]
+
+```{r, cfa1-fit2, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'} 
 Sigma_theta <- fitted(cfa_fit1)$cov
 Sigma_theta #this is the model implied covariance (estimated)
 ``` 
 
-```{r, cfa1-fit3, exercise=TRUE, echo=FALSE}
+```{r, cfa1-fit3, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
+
 S_sample <- inspect(cfa_fit1, 'sampstat')$cov
 S_sample #this is the sample covariance matrix 
 ``` 
 
-```{r, cfa1-fit4, exercise=TRUE, echo=FALSE}
+- `resid()`: return (unstandardized) residuals of a fitted model. This is simply the difference between the observed and implied covariance matrix and mean vector. [`library(lavaan)`]
+
+```{r, cfa1-fit4, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 theta_delta <- resid(cfa_fit1, type = "raw")
 theta_delta
 ``` 
 
-```{r, cfa1-fit5, exercise=TRUE, echo=FALSE}
+```{r, cfa1-fit5, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 std_resids <- resid(cfa_fit1, type = "standardized")
 std_resids
 ``` 
 ---
 ### Futhre insepction: Paramter Estimated 
-```{r, cfa1-fit6, exercise=TRUE, echo=FALSE}
+```{r, cfa1-fit6, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 inspect(cfa_fit1)
 ``` 
 
-```{r, cfa1-fit7, exercise=TRUE, echo=FALSE}
-params <- parameterEstimates(cfa_fit)
+- `parameterEtimates()`: returns a data.frame containing all the model parameters. [`library(lavaan)`]
+
+```{r, cfa1-fit7, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
+params <- parameterEstimates(cfa_fit1)
 params 
 ```
 ---
 ### Path Digrams 
-```{r, cfa1-plot, exercise=TRUE, echo=FALSE}
+```{r, cfa1-plot, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 library(semPlot)
 semPlot::semPaths(cfa_fit1, what = "est", intercept = FALSE,
   rotation = 2, fade = F, edge.color = "black", 
@@ -156,7 +179,9 @@ title("CFA Model 1", line = 1)
 ---
 ### Modification Indices 
 
-```{r, modin1, exercise=TRUE, echo=FALSE}
+- `modindices()`: Provides a list of modification indices. [`library(lavaan)`]
+
+```{r, modin1, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 Mod_inds <- modindices(cfa_fit1, 
            standardized  = TRUE,
            minimum.value = 3.84,
@@ -174,10 +199,11 @@ new_model <-
   
 
 cfa_fit1_new <- 
+assign("cfa_fit1_new", cfa_fit1_new, envir=globalenv())
 ```
 
 #### Exercise:Model Comparisons
-```{r compare, exercise=TRUE, echo=FALSE}
+```{r compare, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 
 anova(cfa_fit1, cfa_fit1_new)
 
@@ -206,7 +232,7 @@ cfa_fit2 <- cfa(model2,
 summary(cfa_fit2)
 ``` 
 
-```{r cfa-sd-all, exercise=TRUE, echo=FALSE}
+```{r cfa-sd-all, exercise=TRUE, echo=FALSE, exercise.setup='cfa-sd'}
 
 cfa_fit_all <- cfa(model2, 
                 data = dat,
@@ -218,7 +244,7 @@ summary(cfa_fit_all)
 ``` 
 
 #### Plotting the diagram 
-```{r, cfa-plot2, exercise=TRUE, echo=FALSE}
+```{r, cfa-plot2, exercise=TRUE, echo=FALSE, exercise.setup='cfa-sd-all'}
 semPlot::semPaths(cfa_fit_all, what = "est", intercept = F,
   rotation = 2, fade = F, edge.color = "black", 
   curvePivot = T, sizeMan = 8, residuals = F, curvature = 3,
@@ -316,7 +342,7 @@ summary(cat_fit)
 
 We can estimate the factor scores of each row in our data set using the `lavPredict()` function. Let's try this with the first model we created `cfa_fit1`
 
-```{r, fscore, exercise=TRUE, echo=FALSE}
+```{r, fscore, exercise=TRUE, echo=FALSE, exercise.setup='cfa1'}
 f_scores <- lavPredict(cfa_fit1)
 head(f_scores)
 ```
@@ -389,7 +415,7 @@ Let's compute the omega score for the factor `TEXTUAL` and `SPEED`
 ```
 
 ### Let's comapre 
-```{r, omega-new, exercise=TRUE, echo=FALSE}
+```{r, omega-new, exercise=TRUE, echo=FALSE, exercise.setup='cfa1'}
 library("semTools")
 reliability(cfa_fit1)
 ``` 
