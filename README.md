@@ -56,4 +56,12 @@ remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess 
 learnr::run_tutorial("week8", package = "LabR6436")
 ```
 
+For week 11: CFA
+
+```r
+remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
+learnr::run_tutorial("week11", package = "LabR6436")
+```
+
+
 
