@@ -126,7 +126,7 @@ fit_stats <- fitMeasures(cfa_fit1, c("chisq.scaled","df.scaled", "pvalue.scaled"
 fit_stats
 ``` 
 
-### Insepction: model's covariance matrix 
+### Inspection 1 : model's covariance matrix 
 
 ```{r, cfa1-fit2, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'} 
 Sigma_theta <- fitted(cfa_fit1)$cov
@@ -151,7 +151,7 @@ std_resids
 ``` 
 ---
 
-### Insepction: Paramter Estimated 
+### Inspection 2: Paramter Estimated 
 
 ```{r, cfa1-fit6, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 inspect(cfa_fit1)
