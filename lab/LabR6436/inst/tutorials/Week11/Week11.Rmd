@@ -126,7 +126,7 @@ fit_stats <- fitMeasures(cfa_fit1, c("chisq.scaled","df.scaled", "pvalue.scaled"
 fit_stats
 ``` 
 
-### Futhre insepction: model's covariance matrix 
+### Insepction: model's covariance matrix 
 
 ```{r, cfa1-fit2, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'} 
 Sigma_theta <- fitted(cfa_fit1)$cov
@@ -151,7 +151,7 @@ std_resids
 ``` 
 ---
 
-### Futhre insepction: Paramter Estimated 
+### Insepction: Paramter Estimated 
 
 ```{r, cfa1-fit6, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 inspect(cfa_fit1)
@@ -189,7 +189,6 @@ Mod_inds <- modindices(cfa_fit1,
 Mod_inds[1:10, ]
 ```
 
-The "~~" symbolizes covariance; the "=~" symbolizes the loading of an observed variable on a factor.
 
 #### Exercise: Modification Indices  
 You can make changes in the model specification in order to accommodate the suggestions based on the modification indices 
