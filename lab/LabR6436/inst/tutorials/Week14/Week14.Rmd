@@ -1,14 +1,14 @@
 ---
 title: "Item Response Theory"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "10/18/2021"
+date: "03/29/2022"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 #install.packages("ltm")
-library(ltm)
+library(ltm) 
 library(learnr)
 library(questionr)
 library(corrplot)
@@ -28,80 +28,104 @@ head(data)
 
 ## 2. Rasch Model 
 
-### Running a rasch model 
+we will run a rasch model using a package called `ltm` and the function called `rasch()`
 
-```{r, rasch, exercise=TRUE, echo=FALSE, exercise.setup = "data"}
+### Running a rasch model 
+```{r, rasch, exercise=TRUE, echo=FALSE, exercise.setup = "data", exercise.lines=12}
 
 #Running rasch model 
-#(the constraints are needed to hold all 
-# discrimination parameters to 1, which 
-# has to be true under the Rasch model)
-RaschModel <- rasch(data, constraint=cbind(ncol(data)+1,1))
-RaschModel
+# the constraints are needed to hold all discrimination parameters to <?>
+
+RaschModel <- rasch(data, # takes your data as your first input 
+                    constraint= # requires a constraint 
+                    )
+
+# Let's take a look at the summary of the model results 
+
+
+```
+
+- Help!
+```{r, help, exercise=TRUE}
+
 ```
 
 ### Extracting estimated parameters 
+- Which parameters are we freely estimating in this model?
 
-```{r param, exercise=TRUE, echo=FALSE,  exercise.setup = "rasch"}
+```{r param, exercise=TRUE, echo=FALSE,  exercise.setup = "rasch", exercise.lines=10}
 #Extracting estimated parameters
-item.pars <- coef(RaschModel)
-item.pars <- as.data.frame(item.pars)
-item.pars
+
+#`coef()`` function let you look at the estimated parameters and we will call this `item.pars`
+
+# Let's present it as a data frame using `as.data.frame()`: default r function 
+
+
 ```
 
 ### Getting ability level 
-
-```{r ability, exercise=TRUE, echo=FALSE,  exercise.setup = "param"}
+```{r ability, exercise=TRUE, echo=FALSE,  exercise.setup = "param", exercise.lines=14}
 
 #Getting ability estimates associated with each response vector
-#(i.e., thetas are z values)
-fscores <- factor.scores(RaschModel)
+# we need to use a new argument `resp.patterns = <data name>`
+fscores <- 
 
+#(i.e., thetas are z values)
+theta = fscores$score.dat$z1
+
+assign("theta", theta, envir=globalenv())   
 ```
 
-### Plotting 
+#### Compare the ability level estimate with the total score 
 
-```{r plot, exercise=TRUE, echo=FALSE , exercise.setup = "rasch"}
+```{r, newdataset, exercise=TRUE, exercise.setup = "data", exercise.lines=11}
+# step 1: let's compute the total score 
 
-#Plotting ICCs for all items
-plot(RaschModel, main="ICC from Rasch Model")
+
+# step 2: extract lines (rows) with the same total score  == 7
+
+
+# step 3: compare with the factor score 
 
 ```
 
 ### Item Characteristic Curve 
 
-$$p = exp((theta - b)) / (1 + exp((theta - b)) )$$
+$$ p = \frac{e^{1.7*(theta - b)}}{1 + e^{1.7*(theta - b)}} $$ 
+# Let's create a function that computes the probability given the theta and 
 
-```{r, icc-value, exercise=TRUE, echo=FALSE, exercise.setup ="ability"}
-latent = fscores$score.dat$z1
-
+```{r, icc-value, exercise=TRUE, echo=FALSE, exercise.lines=25}
+# STEP 1
+# this function takes two input values -> theta and b-parameter 
 prob <- function(theta, b){
-  exp(1.7*(theta - b)) / (1 + exp(1.7*(theta - b)) )
+   # Provide the formula here 
   
 }
-# the difficulty (b-param) of item 2 = 0.76944669
-prob(theta =4, b=0.76944669)
-  
-```
+# STEP 2
+# Let's test it quickly ==> if b=2, theta=2 prob=?
 
-#### Plotting ICC (item 2)
 
-```{r, cal, exercise=TRUE, echo=FALSE, exercise.setup ="icc-value"}
-p0 = prob(theta =-4, b=0.76944669)
-p1 = prob(theta =-3, b=0.76944669)
-p2 = prob(theta =-2, b=0.76944669)
-p3 = prob(theta =-1, b=0.76944669)
-p4 = prob(theta =0, b=0.76944669)
-p5 = prob(theta =1, b=0.76944669)
-p6 = prob(theta =2, b=0.76944669)
-p7 = prob(theta =3, b=0.76944669)
-p8 = prob(theta =4, b=0.76944669)
 
-plot(c(p0, p1, p2, p3, p4, p5, p6, p7, p8), 
-     x = c(-4, -3, -2, -1, 0, 1, 2, 3, 4), 
-     xlab = "Ability", ylab="Probability")
+# STEP 3
+# Let's create ICC for an item with b-parm =2.0
+# ability range from -4 to 4 (increase by +1)
+
+# STEP 4: Uncomment the last three lines when you are ready :-) 
+#plot(c(p0, p1, p2, p3, p4, p5, p6, p7, p8), 
+#     x = c(-4, -3, -2, -1, 0, 1, 2, 3, 4), 
+#     xlab = "Ability", ylab="Probability")
 
 ```
+
+### Plotting 
+- Here's your shortcut! `plot()`
+
+```{r plot, exercise=TRUE, echo=FALSE , exercise.setup = "rasch"}
+#Plotting ICCs for all items
+plot(RaschModel, main="ICC from Rasch Model")
+
+```
+
 
 #### Plotting for a single item 
 
@@ -116,26 +140,23 @@ plot(RaschModel, items = c(2), main="ICC of Item 2")
 $$p = \frac{\exp^{1.7*(\theta - b)}}{1 + \exp^{1.7*(\theta - b)}}$$
 $$ I(\theta) = p(1-p) $$
 
-```{r, iif, exercise=TRUE, echo=FALSE, exercise.setup ="ability"}
+```{r, iif, exercise=TRUE, echo=FALSE, exercise.lines=30}
 
+# STEP 1
+# this function takes two input values -> theta and b-parameter 
 info <- function(theta, b){
-  p = exp(1.7*(theta - b)) / (1 + exp(1.7*(theta - b)) )
-  p*(1-p)
+  # provide the equation here 
 }
 
-b=0.76944669
+# STEP 2
+# Let's test it quickly ==> if b=2, theta=2 info=?
 
-info0 = info(theta = -3, b=b)
-info1 = info(theta = -2, b=b)
-info2 = info(theta = -1, b=b)
-info3 = info(theta = 0, b=b)
-info4 = info(theta = 1, b=b)
-info5 = info(theta = 2, b=b)
-info6 = info(theta = 3, b=b)
-info7 = info(theta = 4, b=b)
+# STEP 3
+# Let's create ICC for an item with b-parm =2.0
+# ability range from -4 to 4 (increase by +1)
 
 
-
+# STEP 4: Uncomment the last three lines when you are ready :-) 
 plot(c(info0, info1, info2, info3, info4, info5, info6, info7),
      x = c(-4, -3, -2, -1, 0, 1, 2, 3),
      xlab = "Ability", ylab="Information")
@@ -143,49 +164,23 @@ plot(c(info0, info1, info2, info3, info4, info5, info6, info7),
 
 ### Plotting Item and Test Information Curve (TCC)
 
-```{r icc, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+```{r icc2, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
 #Plotting TIC
-plot(RaschModel,  type=c("IIC"), main="Test Information Function")
+plot(RaschModel,  type=c("IIC"), main="Item Information Function - All")
 
 #Plotting ICC
-plot(RaschModel, items = c(2), type=c("IIC"), main="Item 2 Information Function")
+plot(RaschModel, items = c(2), type=c("IIC"), main="Item Information Function - Item 2")
 
 ```
 
 ```{r question, echo=FALSE}
 
-question('What is the information for this item at θ = -4?', 
-  answer("0.01", correct=TRUE), 
-  answer("0.001"), 
-  answer("0.0001"),
-  answer("0.00001"))
+question('What is the information for this item [b=0.7694] at θ = 0.7694?', 
+  answer("0.25", correct=TRUE), 
+  answer("0.025"), 
+  answer("0.0025"),
+  answer("0.00025"))
 ```
-
-### Plotting Test Information Curve (ICC)
-
-```{r icc, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
-#Plotting TCC
-plot(RaschModel,  type=c("IIC"), main="Item 2 Information Function")
-
-```
-
-### Item person map 
-```{r, item-person, exercise=TRUE, echo=FALSE, exercise.setup = "ability"}
-#Creating an item person map
-plot(fscores, include.items = TRUE, main ="Item Person Map under Rasch model")
-
-``` 
-
-### Assessing item fit
-
-null hypothesis is basically that observed data matches expected values
-(more on item fit next week; really this should be checked prior to interpreting
-all of the outputs above, such as difficulty estimates, ICCs, and TCC)
-
-```{r fit, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
-item.fit(RaschModel,simulate.p.value = TRUE)
-```
-
 
 ## 3. 2-PL and 3-PL 
 
