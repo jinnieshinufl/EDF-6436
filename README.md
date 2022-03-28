@@ -63,7 +63,7 @@ remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess 
 learnr::run_tutorial("week11", package = "LabR6436")
 ```
 
-For week 14: IRT
+For week 13-14: IRT
 
 ```r
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
