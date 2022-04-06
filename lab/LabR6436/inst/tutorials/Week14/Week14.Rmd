@@ -268,7 +268,7 @@ plot(three.pl.model, main="ICC Curves under 3-PL Model")
 #Creating an item person map
 fscores <- factor.scores(three.pl.model)
 plot(fscores, include.items = TRUE, main ="Item Person Map under 3PL model")
-assign("three.pl.modell",three.pl.model, envir=globalenv())
+assign("three.pl.model",three.pl.model, envir=globalenv())
 ```
 
 ## 4. Model-fit Comparisons 
@@ -277,5 +277,6 @@ anova(two.pl.model, three.pl.model)
 ```
 
 ```{r, rasch4, exercise=TRUE, echo=FALSE, exercise.lines=5}
-cor(coef(two.pl.model)[, 1], coef(three.pl.model)[, 2])
+corr = cor(coef(two.pl.model)[, 1], coef(three.pl.model)[, 2])
+plot(corr)
 ```
