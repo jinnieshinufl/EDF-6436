@@ -1,14 +1,16 @@
 ---
 title: "Item Response Theory"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "03/29/2022"
+date: "04/07/2022"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
 #install.packages("ltm")
+#install.packages("eRm")
 library(ltm) 
+library(eRm)
 library(learnr)
 library(questionr)
 library(corrplot)
@@ -182,6 +184,25 @@ question('What is the information for this item [b=0.7694] at θ = 0.7694?',
   answer("0.00025"))
 ```
 
+## 2. Model-fit 1PL (eRm)
+
+```{r, rasch2, exercise=TRUE, echo=FALSE, exercise.setup = "data", exercise.lines=30}
+
+library(eRm) # loading a library 
+one.pl.model <- RM(data) #using a `RM()` function to fit a rasch model using our dataset
+summary(one.pl.model ) # this will give you a summary of the outcome
+betas <- -coef(one.pl.model ) #we are extracting only the difficulty parameter, but reverse code them
+plotjointICC(one.pl.model , cex = .6) # we can plot ICC 
+plotPImap(one.pl.model , cex.gen = .55) # plot person-item map 
+
+person.fit = person.parameter(one.pl.model)
+itemfit(person.fit)
+plotPWmap(one.pl.model)
+
+plotPWmap(one.pl.model, pmap=TRUE, imap=FALSE)
+assign("one.pl.model",one.pl.model, envir=globalenv())
+```
+
 ## 3. 2-PL and 3-PL 
 
 ### Data
@@ -206,12 +227,14 @@ two.pl.model <- ltm(data ~ z1)
 
 #Assessing item fit
 #null hypothesis is that observed data matches expected values
-item.fit(two.pl.model,simulate.p.value=TRUE)
+#item.fit(two.pl.model,simulate.p.value=TRUE)
 
 #Extracting estimated parameters
 item.pars.two.pl <- coef(two.pl.model)
 item.pars.two.pl <- as.data.frame(item.pars.two.pl)
 item.pars.two.pl
+
+
 
 #Plotting ICCs 
 plot(two.pl.model, main="ICC Curves under 2-PL Model")
@@ -219,6 +242,8 @@ plot(two.pl.model, main="ICC Curves under 2-PL Model")
 #Creating an item person map
 fscores <- factor.scores(two.pl.model)
 plot(fscores, include.items = TRUE, main ="Item Person Map under 2PL model")
+
+assign("two.pl.model",two.pl.model, envir=globalenv())
 ```
 
 ### Running 3PL Model
@@ -230,7 +255,7 @@ three.pl.model <- tpm(data)
 
 #Assessing item fit
 #null hypothesis is that observed data matches expected values
-item.fit(three.pl.model, simulate.p.value=TRUE)
+#item.fit(three.pl.model, simulate.p.value=TRUE)
 
 #Extracting estimated parameters
 item.pars.three.pl <- coef(three.pl.model)
@@ -243,6 +268,14 @@ plot(three.pl.model, main="ICC Curves under 3-PL Model")
 #Creating an item person map
 fscores <- factor.scores(three.pl.model)
 plot(fscores, include.items = TRUE, main ="Item Person Map under 3PL model")
-
+assign("three.pl.modell",three.pl.model, envir=globalenv())
 ```
 
+## 4. Model-fit Comparisons (eRm)
+```{r, rasch3, exercise=TRUE, echo=FALSE, exercise.lines=5}
+anova(two.pl.model, three.pl.model)
+```
+
+```{r, rasch4, exercise=TRUE, echo=FALSE, exercise.lines=5}
+cor(coef(two.pl.model)[, 1], coef(three.pl.model)[, 2])
+```
