@@ -278,5 +278,5 @@ anova(two.pl.model, three.pl.model)
 
 ```{r, rasch4, exercise=TRUE, echo=FALSE, exercise.lines=5}
 corr = cor(coef(two.pl.model)[, 1], coef(three.pl.model)[, 2])
-plot(corr)
+print(corr)
 ```
