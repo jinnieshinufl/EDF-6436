@@ -74,6 +74,9 @@ learnr::run_tutorial("week14", package = "LabR6436")
 For week 15: G-Theory 
 
 ```r
+install.packages("devtools")
+devtools::install_github("cddesja/hemp") # if you have trouble downloading 'hemp'
+
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 learnr::run_tutorial("week15", package = "LabR6436")
 ```
