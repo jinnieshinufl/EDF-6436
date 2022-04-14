@@ -15,15 +15,6 @@ library(questionr)
 
 ## 1. Data 
 
-G-theory expands our understanding of reliability to include multiple facets. The results of a G-study reveal how much variance in the scores is estimated to be explained by
-
-- the object of measurement (usually persons),
-- each of the facets,
-  - including the interactions among facets, and
-  - all interactions with the object of measurement except the highest-order interaction, and
-- error (or residuals), which is confounded with the highest order interaction in the study.
-
-
 ```{r, data, exercise=TRUE, echo=TRUE}
 library(hemp)
 data(efData)
@@ -32,7 +23,7 @@ head(efData)
 dat <- efData
 ```
 
-Let’s turn the variables  into factor-type variables:
+factor-type variables:
 ```{r, data_clean, exercise=TRUE, echo=TRUE, exercise.setup="data"}
 
 dat$Participants <- factor(dat$Participants)
@@ -44,9 +35,6 @@ str(dat)
 ## 2. One-facet study 
 
 ### G-Study 
-Let's take a look at Task 1.  
-
-For a one-facet study, say with raters who score persons, this would be the variance components of
 
 - Persons ($\sigma_{p}^2$)
 - Raters ($\sigma_{r}^2$)
@@ -66,10 +54,6 @@ MSp    <- (anova1["Participants",    "Mean Sq"])
 MSr    <- (anova1["Items",     "Mean Sq"])
 MSpr_e <- (anova1["Residuals", "Mean Sq"])
 ```
-
-In order to calculate the variance components ... 
-
-Because there are several raters, the  `MSp` right now includes the variance across the collections of these raters. Dividing by the number of raters, n_r, estimates this as the average variance component per rater, which is an estimate of the variance component in the population of raters (or universe of raters).
 
 ```{r, r1-f2, exercise=TRUE, echo=FALSE, exercise.setup='r1-f'}
 
