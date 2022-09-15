@@ -1,6 +1,6 @@
 # EDF-6436
 
-## Spring 2022 - EDF 6436: Theory of Measurement 
+## Fall 2022 - EDF 6436: Theory of Measurement 
 
 Welcome everyone! This is a repository for the lab materials provided in EDF 6436 - SPRING 2022
 
@@ -56,4 +56,28 @@ remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess 
 learnr::run_tutorial("week8", package = "LabR6436")
 ```
 
+For week 11: CFA
+
+```r
+remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
+learnr::run_tutorial("week11", package = "LabR6436")
+```
+
+For week 13-14: IRT
+
+```r
+remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
+learnr::run_tutorial("week14", package = "LabR6436")
+```
+
+
+For week 15: G-Theory 
+
+```r
+install.packages("devtools")
+devtools::install_github("cddesja/hemp") # if you have trouble downloading 'hemp'
+
+remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
+learnr::run_tutorial("week15", package = "LabR6436")
+```
 

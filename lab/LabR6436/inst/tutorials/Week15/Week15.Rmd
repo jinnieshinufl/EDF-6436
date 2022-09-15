@@ -1,7 +1,7 @@
 ---
 title: "G-Theory"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "10/18/2021"
+date: "4/13/2021"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -15,15 +15,6 @@ library(questionr)
 
 ## 1. Data 
 
-G-theory expands our understanding of reliability to include multiple facets. The results of a G-study reveal how much variance in the scores is estimated to be explained by
-
-- the object of measurement (usually persons),
-- each of the facets,
-  - including the interactions among facets, and
-  - all interactions with the object of measurement except the highest-order interaction, and
-- error (or residuals), which is confounded with the highest order interaction in the study.
-
-
 ```{r, data, exercise=TRUE, echo=TRUE}
 library(hemp)
 data(efData)
@@ -32,7 +23,7 @@ head(efData)
 dat <- efData
 ```
 
-Let’s turn the variables  into factor-type variables:
+factor-type variables:
 ```{r, data_clean, exercise=TRUE, echo=TRUE, exercise.setup="data"}
 
 dat$Participants <- factor(dat$Participants)
@@ -44,9 +35,6 @@ str(dat)
 ## 2. One-facet study 
 
 ### G-Study 
-Let's take a look at Task 1.  
-
-For a one-facet study, say with raters who score persons, this would be the variance components of
 
 - Persons ($\sigma_{p}^2$)
 - Raters ($\sigma_{r}^2$)
@@ -67,10 +55,6 @@ MSr    <- (anova1["Items",     "Mean Sq"])
 MSpr_e <- (anova1["Residuals", "Mean Sq"])
 ```
 
-In order to calculate the variance components ... 
-
-Because there are several raters, the  `MSp` right now includes the variance across the collections of these raters. Dividing by the number of raters, n_r, estimates this as the average variance component per rater, which is an estimate of the variance component in the population of raters (or universe of raters).
-
 ```{r, r1-f2, exercise=TRUE, echo=FALSE, exercise.setup='r1-f'}
 
 n_p <- length(levels(dat$Participants))
@@ -85,7 +69,7 @@ VCpr_e <- MSpr_e
 ### D-Study 
 Now that we have the expected variance components, we can estimate the reliability (G-coefficient). The formula is
 $$ G = \frac{\hat{\sigma}_{p}^2 }{\hat{\sigma}_{p}^2 + \hat{\sigma}_{REL}^2} $$
-the error term $ \hat{\sigma}_{REL}^2 $ is all the sources of variation that have an effect on persons’ relative standing in the scores.
+the error term $$ \hat{\sigma}_{REL}^2 $$ is all the sources of variation that have an effect on persons’ relative standing in the scores.
 
 $$ \hat{\sigma}_{REL}^2 = \frac{\hat{\sigma}_{pr,e}^2}{n_r} $$ 
 
@@ -114,88 +98,3 @@ plot(Dstudy[,c("N_items", "G_coef")]) # plotting the results
 ``` 
 
 With this type of information, we can make decisions about the number of items to retain or add based on its effect on reliability 
-
-## 3. Two-facet study 
-### G-Study 
-
-```{r, dat2, exercise=TRUE, echo=FALSE}
-data(writing)
-head(writing)
-
-dat2 <- writing 
-
-dat2$students <- as.factor(dat2$students )
-dat2$prompts <- as.factor(dat2$prompts)
-dat2$raters <- as.factor(dat2$raters)
-str(dat2)
-``` 
-
-For a two-facet study, say with raters who score persons on several items, this would be the variance components of
-
-- Persons ($\sigma_{p}^2$)
-- Raters ($\sigma_{r}^2$)
-- **Tasks ($\sigma_{t}^2$)**
-- Persons-by-raters interaction ($\sigma_{pr}^2$)
-- Persons-by-**tasks** interaction ($\sigma_{pt}^2$)
-- Raters-by-**tasks** Interaction ($\sigma_{rt}^2$)
-- the person-by-rater-by-**tasks** interaction confounded with error ($\sigma_{pr,e}^2$)
-
-Let's use the `VCA` pakage for the two-facet. This will automatically conduct many of the steps we manually did for the one-facet demonstration. 
-```{r, r2, exercise=TRUE, echo=FALSE, exercise.setup="dat2"}
-#install.packages('VCA')
-library(VCA)
-
-fit3  <- anovaMM(scores ~ (students) + (raters) + (prompts) + 
-                         (students):(raters) + 
-                         (students):(prompts) + 
-                         (raters):(prompts), dat2)
-
-inf    <- VCAinference(fit3, VarVC = TRUE)
-VC     <- inf$VCA$aov.tab
-gstudy <- data.frame(VC[, 1:5])
-names(gstudy)[5] <- "PcntVar"
-#We can reorder the rows:
-gstudy<- gstudy[c(2:3,4,5,6:8,1), ]
-round(gstudy,2)
-
-``` 
-
-### D-Study 
-
-```{r, ex3, exercise=TRUE, echo=FALSE, exercise.setup="r2", exercise.lines=15}
-# Let's get the number of persons and the number of conditions per facet
-n_p  <- length(levels(dat2$students))
-n_r  <- length(levels(dat2$raters) )
-n_i  <- length(levels(dat2$prompts)  )
-
-#Variance Components:
-VCp  <- gstudy["students"      , "VC"]
-VCr  <- gstudy["raters"       , "VC"]
-VCi  <- gstudy["prompts"        , "VC"]
-VCpr <- gstudy["students:raters", "VC"]
-VCpi <- gstudy["students:prompts" , "VC"]
-VCri <- gstudy["raters:prompts"  , "VC"]
-VCpri_e<- gstudy["error"    , "VC"]
-```
-
-#### Estimating the G coefficient 
-```{r, g3, exercise=TRUE, echo=FALSE, exercise.setup="ex3"}
-# Estimate of the G-coefficient reliability 
-Err_Rel <- VCpr/n_r + VCpi/n_i +   VCpri_e/(n_r*n_i)
-G       <- VCp/(VCp + Err_Rel)
-round(G,3)
-```
-
-#### Projecting the effect of number of raters
-```{r, g4, exercise=TRUE, echo=FALSE, exercise.setup='g2'}
-D_r     <- c(n_r, 1:15) # The first listing is our actual design.
-D_i     <- n_i
-Err_Rel <- VCpr/D_r + VCpi/D_i + VCpri_e/(D_r*D_i)
-G       <- VCp/(VCp + Err_Rel)
-Dstudy  <- data.frame(N.Item    = D_i, 
-                      N.Rater   = D_r, 
-                      Err_Rel   = round(Err_Rel,3),
-                      G_coef    = round(G,3))
-
-plot(Dstudy[,c("N.Rater", "G_coef")], subtitle="N.item =5 ")
-``` 

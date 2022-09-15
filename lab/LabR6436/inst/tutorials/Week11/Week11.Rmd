@@ -1,7 +1,7 @@
 ---
-title: "Explaratory Factor Analysis"
+title: "Confirmatory Factor Analysis"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "10/18/2021"
+date: "15/3/2022"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -11,10 +11,12 @@ library(lavaan)
 library(learnr)
 library(questionr)
 library(corrplot)
+library(semTools)
 ```
 
 ## 1. Data 
 We will use the `lavaan` package (Rosseel et al., 2020) for estimating confirmatory factor analysis models. 
+
 - We will use the Holzinger and Swineford Dataset, which you can read more about with `?HolzingerSwineford1939`
 
 ```{r print-limit-hint}
@@ -48,14 +50,15 @@ round(multi_out2,3)
 ```
 
 ```{text}
-Both skewness and kurtosis are very high, pointing to multivariate outliers that might inflate standard errors of coefficients (coefficients themselves are mostly unaffected by non-normality).
+Both skewness and kurtosis are very high, pointing to multivariate outliers that might inflate 
+standard errors of coefficients (coefficients themselves are mostly unaffected by non-normality).
 ```
 
 #### EXERCISE 
 ```{r question, echo=FALSE}
 question("which of the following statement is true? (Select all)",
          answer("The violation informs our estimation model selection", correct=TRUE), 
-         answer("We might need to revmove the outliers ", correct=TRUE),
+         answer("We might need to remove the outliers ", correct=TRUE),
          answer("The violation is minimal so we can proceed as is"),
          answer("We should report this result as it has implciations on the confidence in interperting the results", correct=TRUE)
 )
@@ -63,6 +66,7 @@ question("which of the following statement is true? (Select all)",
 
 ## 3. Case 1 - CFA specificaiton
 Instead of using maximum likelihood estimation, we can use a robust estimation approach, specifically the “maximum likelihood robust” (MLR) method. 
+- Adjustment: Chi-squared (and associated fit statistics that use it: RMSEA, CFI, TLI)
 
 We will first specify the model using the `lavaan` package.
 
@@ -81,7 +85,7 @@ model <- "VISUAL =~ x1 + x2 + x3
 
 Once we specified and saved our model to `model`, we can fit the model using the `cfa()` function. We will use the `estimator="MLR"`to specify the robust maximum likelihood estimation method. We can use the `mimic = "Mplus"` argument if we wish to acquire output that is similar to what it would be if we were to use Mplus software.
 
-```{r, cfa1, exercise=TRUE, echo=FALSE}
+```{r, cfa1, exercise=TRUE, echo=FALSE, exercise.setup= 'case1'}
 
 cfa_fit1 <- cfa(model, 
                 data = dat,
@@ -92,16 +96,28 @@ cfa_fit1 <- cfa(model,
 
 Let's take a look at the model fit together
 
-```{r cfa1-result, exercise=TRUE, echo=FALSE}
+```{r cfa1-result, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 summary(cfa_fit1, 
         fit.measures = TRUE, 
         standardized = TRUE, 
         rsquare      = TRUE)
 ```
-
 ## 4. Case 1 - Model Evaluation 
+### Model fit indices 
 
-```{r, cfa1-fit, exercise=TRUE, echo=TRUE}
+- Each fit index answers a different question about model fit \ 
+- CFI/TLI, SRMR, RMSEA, Chi-square ....
+
+#### Explanations
+- **Chi-squared**: Assess the overall fit and the discrepancy between the sample and fitted covariance matrices. Its p-value should be > .05 (i.e., the hypothesis of a perfect fit cannot be rejected). However, it is quite sensitive to sample size.
+
+- **CFI**: The Comparative Fit Index is a revised form of NFI. Not very sensitive to sample size (Fan, Thompson, & Wang, 1999). Compares the fit of a target model to the fit of an independent, or null, model. It should be > .90.
+
+- **RMSEA** : The Root Mean Square Error of Approximation is a parsimony-adjusted index. Values closer to 0 represent a good fit. It should be < .08 or < .05. The p-value printed with it tests the hypothesis that RMSEA is less than or equal to .05 (a cutoff sometimes used for good fit), and thus should be not significant.
+
+- **SRMR**: the (Standardized) Root Mean Square Residual represents the square-root of the difference between the residuals of the sample covariance matrix and the hypothesized model. As the RMR can be sometimes hard to interpret, better to use SRMR. Should be < .08.
+
+```{r, cfa1-fit, exercise=TRUE, echo=TRUE, exercise.setup= 'cfa1'}
 fit_stats <- fitMeasures(cfa_fit1, c("chisq.scaled","df.scaled", "pvalue.scaled", 
                                     "cfi.robust", 
                                     "tli.robust", 
@@ -109,74 +125,85 @@ fit_stats <- fitMeasures(cfa_fit1, c("chisq.scaled","df.scaled", "pvalue.scaled"
                                     "srmr"))
 fit_stats
 ``` 
----
-### Futhre insepction: model's covariance matrix 
-```{r, cfa1-fit2, exercise=TRUE, echo=FALSE}
+
+### Inspection 1 : model's covariance matrix 
+
+```{r, cfa1-fit2, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'} 
 Sigma_theta <- fitted(cfa_fit1)$cov
 Sigma_theta #this is the model implied covariance (estimated)
 ``` 
 
-```{r, cfa1-fit3, exercise=TRUE, echo=FALSE}
+```{r, cfa1-fit3, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
+
 S_sample <- inspect(cfa_fit1, 'sampstat')$cov
 S_sample #this is the sample covariance matrix 
 ``` 
 
-```{r, cfa1-fit4, exercise=TRUE, echo=FALSE}
+
+```{r, cfa1-fit4, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 theta_delta <- resid(cfa_fit1, type = "raw")
 theta_delta
 ``` 
 
-```{r, cfa1-fit5, exercise=TRUE, echo=FALSE}
+```{r, cfa1-fit5, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 std_resids <- resid(cfa_fit1, type = "standardized")
 std_resids
 ``` 
 ---
-### Futhre insepction: Paramter Estimated 
-```{r, cfa1-fit6, exercise=TRUE, echo=FALSE}
+
+### Inspection 2: Paramter Estimated 
+
+```{r, cfa1-fit6, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 inspect(cfa_fit1)
 ``` 
 
-```{r, cfa1-fit7, exercise=TRUE, echo=FALSE}
-params <- parameterEstimates(cfa_fit)
+```{r, cfa1-fit7, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
+params <- parameterEstimates(cfa_fit1)
 params 
 ```
+
+
 ---
+
 ### Path Digrams 
-```{r, cfa1-plot, exercise=TRUE, echo=FALSE}
+```{r, cfa1-plot, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 library(semPlot)
 semPlot::semPaths(cfa_fit1, what = "est", intercept = FALSE,
-  rotation = 2, fade = F, edge.color = "black", 
-  curvePivot = T, sizeMan = 8, residuals = F, curvature = 2.5,
-  title = FALSE, sizeMan2 = 3, sizeLat2 = 8,
-  label.cex = 1, edge.label.cex = 1.2)
+                  rotation = 2, fade = F, edge.color = "black", 
+                  curvePivot = T, sizeMan = 8, residuals = F, curvature = 2.5,
+                  title = FALSE, sizeMan2 = 3, sizeLat2 = 8,
+                  label.cex = 1, edge.label.cex = 1.2)
 
 title("CFA Model 1", line = 1)
 ```
 ---
-### Modification Indices 
 
-```{r, modin1, exercise=TRUE, echo=FALSE}
+### Modification Indices 
+  
+  
+```{r, modin1, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 Mod_inds <- modindices(cfa_fit1, 
-           standardized  = TRUE,
-           minimum.value = 3.84,
-                   sort. = TRUE)
+                       standardized  = TRUE,
+                       minimum.value = 3.84,
+                       sort. = TRUE)
 Mod_inds[1:10, ]
 ```
 
-The `~~`symbolizes covariance; the `=~` symbolizes the loading of an observed variable on a factor.
 
 #### Exercise: Modification Indices  
 You can make changes in the model specification in order to accommodate the suggestions based on the modification indices 
+
 ```{r, exe, exercise=TRUE, echo=FALSE, exercise.lines=20}
 # your code here 
 new_model <- 
   
-
-cfa_fit1_new <- 
+  
+  cfa_fit1_new <- 
+  assign("cfa_fit1_new", cfa_fit1_new, envir=globalenv())
 ```
 
 #### Exercise:Model Comparisons
-```{r compare, exercise=TRUE, echo=FALSE}
+```{r compare, exercise=TRUE, echo=FALSE, exercise.setup= 'cfa1'}
 
 anova(cfa_fit1, cfa_fit1_new)
 
@@ -184,9 +211,9 @@ anova(cfa_fit1, cfa_fit1_new)
 
 - How did the model fit change?
 - Does this theoretically make sense? 
-
+  
 ## 5. Case 1 - Standardized Solution 
-If we wish to set our factor scales to have a variance of 1 instead of forcing them to be on the scale of the first variable, we can use the `NA*` as a prefix to the first observed variable in a factor to tell lavaan to estimate that parameter. We then should set the variance of the factor to 1 using the `~~` operator with *1. Let's try this with the factor `VISUAL`
+  If we wish to set our factor scales to have a variance of 1 instead of forcing them to be on the scale of the first variable, we can use the `NA*` as a prefix to the first observed variable in a factor to tell lavaan to estimate that parameter. We then should set the variance of the factor to 1 using the `~~` operator with *1. Let's try this with the factor `VISUAL`
 
 ```{r cfa-sd, exercise=TRUE, echo=FALSE}
 
@@ -205,7 +232,7 @@ cfa_fit2 <- cfa(model2,
 summary(cfa_fit2)
 ``` 
 
-```{r cfa-sd-all, exercise=TRUE, echo=FALSE}
+```{r cfa-sd-all, exercise=TRUE, echo=FALSE, exercise.setup='cfa-sd'}
 
 cfa_fit_all <- cfa(model2, 
                 data = dat,
@@ -216,8 +243,9 @@ cfa_fit_all <- cfa(model2,
 summary(cfa_fit_all)
 ``` 
 
+
 #### Plotting the diagram 
-```{r, cfa-plot2, exercise=TRUE, echo=FALSE}
+```{r, cfa-plot2, exercise=TRUE, echo=FALSE, exercise.setup='cfa-sd-all'}
 semPlot::semPaths(cfa_fit_all, what = "est", intercept = F,
   rotation = 2, fade = F, edge.color = "black", 
   curvePivot = T, sizeMan = 8, residuals = F, curvature = 3,
@@ -231,7 +259,9 @@ title("CFA Model 2: Factors Standardized solution", line = 1)
 Both skewness and kurtosis are very high, pointing to multivariate outliers that might inflate standard errors of coefficients (coefficients themselves are mostly unaffected by non-normality).
 
 Thus, we remove all subjects/observations with values outside +/- 3 SD from the mean on at least one of the ten life satisfaction variables. By removing univariate outliers we also want to make sure that influential data points play no role for the factor solution.
+
 ### Remove the outliers 
+
 ```{r, new_cfa, exercise=TRUE, echo=FALSE}
 library(tidyverse)
 
@@ -246,14 +276,16 @@ clean_dat <- dat %>%
 ```
 
 ### Check the normality assumption again 
-```{r, normality, exercise=TRUE, echo=FALSE}
+```{r, normality, exercise=TRUE, echo=FALSE, exercise.setup="new_cfa"}
 mardiaSkew(clean_dat, use = "everything")
 mardiaKurtosis(clean_dat, use = "everything")
 ``` 
 
---- 
+---
+
 ### Model Specification 
-```{r cfa-case2, exercise=TRUE, echo=FALSE}
+
+```{r cfa-case2, exercise=TRUE, echo=FALSE, exercise.setup="new_cfa"}
 
 library(lavaan)
 model3 <- "VISUAL =~ x1 + x2 + x3 
@@ -267,7 +299,7 @@ cfa_fit3 <- cfa(model3,
 summary(cfa_fit3)
 ``` 
 
-```{r cfa-case3, exercise=TRUE, echo=FALSE}
+```{r cfa-case3, exercise=TRUE, echo=FALSE, exercise.setup="new_cfa"}
 
 library(lavaan)
 model3 <- "VISUAL =~ x1 + x2 + x3 
@@ -283,7 +315,7 @@ summary(cfa_fit4)
 ``` 
 
 ## 7. Case 3 - Categorical Data 
-It is difficult to satify the normality assumption with categorical data. One approach to conducting CFA with categorical data is to use weighted-least-squares-means-and-variance-adjusted estimation (or "WLSMV"). In order to use this with the `lavaan` package, we need to Specify the variables as ordered factor and specify `estimator = "WLSMV"`.
+It is difficult to satisfy the normality assumption with categorical data. One approach to conducting CFA with categorical data is to use weighted-least-squares-means-and-variance-adjusted estimation (or "WLSMV"). In order to use this with the `lavaan` package, we need to Specify the variables as ordered factor and specify `estimator = "WLSMV"`.
 
 ```{r, echo=FALSE}
 library(ltm)
@@ -315,16 +347,17 @@ summary(cat_fit)
 
 We can estimate the factor scores of each row in our data set using the `lavPredict()` function. Let's try this with the first model we created `cfa_fit1`
 
-```{r, fscore, exercise=TRUE, echo=FALSE}
+```{r, fscore, exercise=TRUE, echo=FALSE, exercise.setup='cfa1'}
 f_scores <- lavPredict(cfa_fit1)
 head(f_scores)
 ```
 
+
 ## 9. Internal Consistency reliability 
 We can calculate coefficient omega of a factor, using its items’ pattern coefficients and error variances when we specify the latent variables as standardized, with this equation:
-
-$$ \omega = \frac{(\Sigma \hat{a}_{i})^2}{(\Sigma \hat{a}_{i})^2 + \Sigma \sigma_{u_i}^2} $$ 
-
+  
+  $$ \omega = \frac{(\Sigma \hat{a}_{i})^2}{(\Sigma \hat{a}_{i})^2 + \Sigma \sigma_{u_i}^2} $$ 
+  
 - $a$: standardized factor loadings of each observed variable
 
 - $\sigma^2$:  estimated error variances of each observed variable
@@ -345,13 +378,14 @@ cfa_fit1 <- cfa(model,
 library(semPlot)
 
 semPlot::semPaths(cfa_fit1, what = "est", intercept = FALSE,
-  rotation = 2, fade = F, edge.color = "black", 
-  curvePivot = T, sizeMan = 8, residuals = F, curvature = 2.5,
-  title = FALSE, sizeMan2 = 3, sizeLat2 = 8,
-  label.cex = 1, edge.label.cex = 1.2)
+                  rotation = 2, fade = F, edge.color = "black", 
+                  curvePivot = T, sizeMan = 8, residuals = F, curvature = 2.5,
+                  title = FALSE, sizeMan2 = 3, sizeLat2 = 8,
+                  label.cex = 1, edge.label.cex = 1.2)
 
 title("CFA Model 1", line = 1)
 ```
+
 
 ```{r, omega, exercise=TRUE, echo=FALSE}
 
@@ -379,6 +413,7 @@ summary(omega_fit)
 
 #### Exercise 
 Let's compute the omega score for the factor `TEXTUAL` and `SPEED`
+
 ```{r, your-code, exercise=TRUE, echo=FALSE, exercise.lines=20}
 
 ```
@@ -388,26 +423,21 @@ Let's compute the omega score for the factor `TEXTUAL` and `SPEED`
 ```
 
 ### Let's comapre 
-```{r, omega-new, exercise=TRUE, echo=FALSE}
+
+```{r, omega-new, exercise=TRUE, echo=FALSE, exercise.setup="cfa1"}
 library("semTools")
 reliability(cfa_fit1)
+
 ``` 
 
-## 10. CFA and CTT 
-We can evaluate CTT models with CFA.  We can fit these models using CFA and conduct model comparisons to determine which model best matches our data. 
 
-| **Congeneric  **          | **Tau-equivalent  **       | **Parallel**               |
-|-----------------------|-----------------------|-----------------------|
-| Unidimensional        | Unidimensional        | Unidimensional        |
-| No error correlations | No error correlations | No error correlations |
-|                       | Equal Factor loadings | Equal Factor loadings |
-|                       |                       | Equal error variances |
---- 
+## 10. CFA and CTT 
+
+
 ### Congeneric Model Specification 
 ```{r, cogen, exercise=TRUE, echo=FALSE, exercise.lines=13}
 
-congen <-"
-         VISUAL =~ NA*x1 + x2 + x3
+congen <-"VISUAL =~ NA*x1 + x2 + x3
          TEXTUAL =~ NA*x4 + x5 + x6
          SPEED =~ NA*x7 + x8 + x9 
         
@@ -418,10 +448,12 @@ congen <-"
 
 congen_fit <- cfa(congen, data=dat, estimator="MLR", mimic ="Mplus")
 summary(congen_fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
+
 ```
 --- 
+
 ### Tau-equivalent Model Specification
-```{r, tau, exercise=TRUE, echo=FALSE, exercise.lines=17}
+  ```{r, tau, exercise=TRUE, echo=FALSE, exercise.lines=17}
 
 etau <-" VISUAL =~ NA*x1 + L1*x1 + L1*x2 + L1*x3
          TEXTUAL =~ NA*x4 + L2*x4 + L1*x5 + L1*x6 
@@ -440,9 +472,10 @@ etau <-" VISUAL =~ NA*x1 + L1*x1 + L1*x2 + L1*x3
 etau_fit <- cfa(etau, data=dat, estimator="MLR", mimic ="Mplus")
 summary(etau_fit, fit.measures = TRUE, standardized = TRUE, rsquare = TRUE)
 ```
---- 
+---
+
 ### Parallel Model Specification 
-```{r, parallel, exercise=TRUE, echo=FALSE, exercise.lines=27}
+  ```{r, parallel, exercise=TRUE, echo=FALSE, exercise.lines=27}
 
 parallel <-" VISUAL =~ NA*x1 + L1*x1 + L1*x2 + L1*x3
              TEXTUAL =~ NA*x4 + L2*x4 + L2*x5 + L2*x6 
@@ -487,5 +520,3 @@ print(output3$FIT)
 anova(congen_fit, etau_fit)
 
 ```
-
-

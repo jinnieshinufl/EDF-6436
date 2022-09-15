@@ -25,28 +25,26 @@ knitr::opts_chunk$set(echo = FALSE)
 269 observations with 20 items on the depression mood scale, `interest` https://rdrr.io/cran/psy/man/ehd.html
 
 ```{r, echo=FALSE}
-data(interest)
+interest = read.table('./data/new_data.csv')
+interest = as.data.frame(interest)
 
 assign("interest", interest, envir=globalenv()) # we will save and run this dataset throughout this exercise. 
-
 complement <- function(y, rho, x) {
   if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
   y.perp <- residuals(lm(x ~ y))
   rho * sd(y.perp) * y + y.perp * sd(y) * sqrt(1 - rho^2)
 }
-
 my.data <- data.frame(stress.self = interest$stress,
                       impulsve.self = interest$impulsve, 
                       worry.self = interest$worry)
 my.data$'stress.peer' = round(complement(my.data$stress.self, 0.752),2)
 my.data$'impulsve.peer' = round(complement(my.data$impulsve.self, 0.89),2)
 my.data$'worry.peer' = round(complement(my.data$worry.self, 0.783),2)
-
 assign("my.data", my.data, envir=globalenv()) # we will save and run this dataset throughout this exercise. 
 ```
 
 ```{r}
-head(interest)
+#head(interest)
 ```
 
 ### Let's check the dimension 
@@ -120,7 +118,7 @@ question("The findings could be used as evidence of ________ validity of the soc
 ## 4. MTMM
 
 ```{r}
-head(my.data)
+head(interest)
 ```
 
 

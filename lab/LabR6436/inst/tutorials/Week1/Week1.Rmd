@@ -468,7 +468,6 @@ question("The value of the correlation indicates the strength of the linear rela
   answer("False")
 )
 ```
-<<<<<<< HEAD
 =======
 
 ## 10. Regression (Continue)
@@ -485,5 +484,3 @@ $$ [\hat{\beta_{i}}-1.96*s.e(\hat{\beta_{i}}), \hat{\beta_{i}}+1.96*s.e(\hat{\be
 summary(fit.reg)
 confint(fit.reg)
 ```
-
->>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
