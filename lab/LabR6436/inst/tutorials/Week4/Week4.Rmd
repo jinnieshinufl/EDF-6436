@@ -31,11 +31,8 @@ print(CTTkey)
 ```
 
 ### Change the dataframe to dichotomous 
-<<<<<<< HEAD
-```{r, score_data, echo=TRUE, exercise=TRUE, execise.setup="data2"}
-=======
+
 ```{r, score_data, echo=FALSE, exercise=TRUE, exercise.setup="data2"}
->>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 
 data <- score(CTTdata,CTTkey, output.scored=TRUE)
 response <- as.data.frame(data$scored)
@@ -43,11 +40,9 @@ scores <- as.data.frame(data$score)
 
 head(scores) # this saves each student's total score 
 head(response) # this saves the item score (0 or 1)
+```
 
-<<<<<<< HEAD
 ```{r, test2, exercise=TRUE, echo=TRUE, exercise.setup="score_data"} 
-=======
->>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 describe(scores)
 
 x <- scores$'data$score'
@@ -61,11 +56,7 @@ abline(v = mean(x), col = "red", lwd = 2)
 ## 2. Item Difficulty 
 
 Now we have a new data frame called `response` which stores the dichotomous item scores
-<<<<<<< HEAD
-```{r, response_data, exercise=TRUE, echo=TRUE, exercise.setup="score_data"} 
-=======
 ```{r,  e12, echo=FALSE, exercise=TRUE, exercise.setup="score_data"}
->>>>>>> 7d0206c2cd377818d99a3575d3f4614b7a7e5230
 head(response)
 ```
 
