@@ -1,17 +1,16 @@
 ---
 title: "Validity"
 author: "Jinnie shin | jinnie.shin@coe.ufl.edu"
-date: "10/18/2021"
+date: "10/13/2022"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
 ```{r setup, include=FALSE}
-#install.packages(c('hemp', 'stringr','Hmisc', 'reshape2', 'surveydata', 'dplyr'))
+#install.packages(c( 'stringr','Hmisc', 'reshape2', 'surveydata', 'dplyr'))
 library(learnr)
 library(truncnorm)
 library(ggplot2)
-library(hemp)
 library(stringr)
 library(Hmisc)
 library(reshape2)
@@ -21,19 +20,21 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## 1. Data
-### `ehd` dataset from the `psy` package 
-269 observations with 20 items on the depression mood scale, `interest` https://rdrr.io/cran/psy/man/ehd.html
+### `interest` data 
 
-```{r, echo=FALSE}
-interest = read.table('./data/new_data.csv')
+```{r, result1}
+load("data/interest.RData")
 interest = as.data.frame(interest)
 
-assign("interest", interest, envir=globalenv()) # we will save and run this dataset throughout this exercise. 
+assign("interest", interest, envir=globalenv()) # we will save and run this 
+
+
 complement <- function(y, rho, x) {
   if (missing(x)) x <- rnorm(length(y)) # Optional: supply a default if `x` is not given
   y.perp <- residuals(lm(x ~ y))
   rho * sd(y.perp) * y + y.perp * sd(y) * sqrt(1 - rho^2)
 }
+
 my.data <- data.frame(stress.self = interest$stress,
                       impulsve.self = interest$impulsve, 
                       worry.self = interest$worry)
@@ -44,11 +45,13 @@ assign("my.data", my.data, envir=globalenv()) # we will save and run this datase
 ```
 
 ```{r}
-#head(interest)
+head(interest)
 ```
 
 ### Let's check the dimension 
 ```{r, q23, exercise=TRUE}
+# column names? 
+
 
 
 ```
@@ -68,8 +71,7 @@ assign("my.data", my.data, envir=globalenv()) # we will save and run this datase
 
 ## 2. Content Validity 
 
-A common form of validity evidence is expert opin-
-ion. The opinions of experts can help comment on the appropriateness of the content of the items, whether the instrument is adequately sampling all the concepts within the construct, and whether the items are essential for measuring the target construct. One way to quantify the latter is with the content validity ratio, CVR (Lawshe, 1975). The CVR is defined as:
+A common form of validity evidence is expert opinion. The opinions of experts can help comment on the appropriateness of the content of the items, whether the instrument is adequately sampling all the concepts within the construct, and whether the items are essential for measuring the target construct. One way to quantify the latter is with the content validity ratio, CVR (Lawshe, 1975). The CVR is defined as:
 
 $$ CVR = \frac{n_{e}-(N/2)}{N/2} $$ 
 
