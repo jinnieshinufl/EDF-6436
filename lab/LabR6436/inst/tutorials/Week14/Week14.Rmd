@@ -184,26 +184,38 @@ question('What is the information for this item [b=0.7694] at θ = 0.7694?',
   answer("0.00025"))
 ```
 
-## 2. Model-fit 1PL (eRm)
+### Evaluating the Model 
+#### 1. Test for the item fit using `item.fit`
+```{r 1pleval, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+item.fit(RaschModel,simulate.p.value=T) # are there any particular items with small p-values? 
 
-```{r, rasch2, exercise=TRUE, echo=FALSE, exercise.setup = "data", exercise.lines=30}
 
-library(eRm) # loading a library 
-one.pl.model <- RM(data) #using a `RM()` function to fit a rasch model using our dataset
-summary(one.pl.model ) # this will give you a summary of the outcome
-betas <- -coef(one.pl.model ) #we are extracting only the difficulty parameter, but reverse code them
-plotjointICC(one.pl.model , cex = .6) # we can plot ICC 
-plotPImap(one.pl.model , cex.gen = .55) # plot person-item map 
+```
+#### 1. Test for the person fit using `person.fit`
+```{r 1pleval2, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+person.fit(RaschModel,simulate.p.value=T) 
 
-person.fit = person.parameter(one.pl.model)
-itemfit(person.fit)
-plotPWmap(one.pl.model)
-
-plotPWmap(one.pl.model, pmap=TRUE, imap=FALSE)
-assign("one.pl.model",one.pl.model, envir=globalenv())
 ```
 
-## 3. 2-PL and 3-PL 
+
+#### 3. Estimate ability score (theta) & Person-item map
+> Person-item map: Displays the location of person abilities and item difficulties respectively along the same latent dimension. 
+
+```{r 1pleval3, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+fscores = factor.scores(RaschModel) # don't provide the response matrix thist ime 
+plot(fscores)
+plot(fscores, include.items = TRUE, main ="Item Person Map under 1PL model")
+```
+
+
+#### 4. Test for Unidimensionality (this will run for a long time)
+```{r 1pleval4, exercise=TRUE, echo=FALSE, exercise.setup = "rasch"}
+unidimTest(RaschModel, data)
+# the null hypothesis = unidimensional
+# if the test is significant =/ unidimensional 
+```
+
+## 2. 2-PL and 3-PL 
 
 ### Data
 
@@ -220,7 +232,7 @@ data <- as.matrix(temp[1:3000,1:20])
 
 ### Running 2PL Model
 
-```{r, 2pl, exercise=TRUE, echo=FALSE, exercise.setup = "data2"}
+```{r, 2pl, exercise=TRUE, echo=FALSE, exercise.setup = "data2", exercise.lines=30}
 
 #Running 2-PL model
 two.pl.model <- ltm(data ~ z1)
@@ -271,7 +283,26 @@ plot(fscores, include.items = TRUE, main ="Item Person Map under 3PL model")
 assign("three.pl.modell",three.pl.model, envir=globalenv())
 ```
 
-## 4. Model-fit Comparisons (eRm)
+## 3. Model-fit 1PL (eRm-other pacakges)
+
+```{r, rasch2, exercise=TRUE, echo=FALSE, exercise.setup = "data", exercise.lines=30}
+
+library(eRm) # loading a library 
+one.pl.model <- RM(data) #using a `RM()` function to fit a rasch model using our dataset
+summary(one.pl.model ) # this will give you a summary of the outcome
+betas <- -coef(one.pl.model ) #we are extracting only the difficulty parameter, but reverse code them
+plotjointICC(one.pl.model , cex = .6) # we can plot ICC 
+plotPImap(one.pl.model , cex.gen = .55) # plot person-item map 
+
+person.fit = person.parameter(one.pl.model)
+itemfit(person.fit)
+plotPWmap(one.pl.model)
+
+plotPWmap(one.pl.model, pmap=TRUE, imap=FALSE)
+assign("one.pl.model",one.pl.model, envir=globalenv())
+```
+
+## 4. Model-fit Comparisons (eRm-other pacakges)
 ```{r, rasch3, exercise=TRUE, echo=FALSE, exercise.lines=5}
 anova(two.pl.model, three.pl.model)
 ```
