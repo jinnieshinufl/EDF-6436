@@ -8,9 +8,13 @@ Welcome everyone! This is a repository for the lab materials provided in EDF 693
 You can copy and past this following code in R to run the lab tutorial (You only need to run this part once!) 
 ```r
 install.packages(c('remotes', 'shiny'))
+```
+Next 
+```r
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 remotes::install_github("rstudio/learnr", force=TRUE)
 ```
+
 ### Syllabus (Tentative)
 For week 1: Basic Statistics review for EDF 6436 
 
