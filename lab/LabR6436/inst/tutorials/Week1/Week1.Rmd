@@ -7,10 +7,8 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(gradethis)
 library(truncnorm)
 library(ggplot2)
-tutorial_options(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -100,10 +98,6 @@ mode(my.data$age) # in order to look at the specific variable [dataset]$[varaibl
 mean(my.data$gpa_pre) 
 ```
 
-```{r mean_mode-check}
-grade_this_code()
-```
-
 ```{r mean_mode2, exercise=TRUE, exercise.setup ="data"}
 # check the standard deviation of the variable ``creativity``
 
@@ -111,10 +105,6 @@ grade_this_code()
 
 ```{r mean_mode2-solution}
 sd(my.data$creativity)
-```
-
-```{r mean_mode2-check}
-grade_this_code()
 ```
 
 ## 4. Central Tendency 
@@ -209,10 +199,6 @@ SS = sum(var2)
 SS
 ```
 
-```{r SS2-check}
-grade_this_code()
-``` 
-
 
 
 ## 6. Z-scores (Standard Score)
@@ -264,9 +250,7 @@ item_score = c(0,0,0,1)
 mean(item_score)
 ``` 
 
-```{r q1-check}
-grade_this_code()
-``` 
+
 
 ```{r q2, echo=FALSE, exercise=TRUE}
 # Q2
@@ -282,9 +266,7 @@ var(test_score)
 sd(test_score)
 ```
 
-```{r q2-check}
-grade_this_code()
-```
+
 
 ```{r q3, echo=FALSE, exercise=TRUE}
 # Q3 
@@ -299,9 +281,7 @@ test_score = c(66, 78, 89, 72)
 (72 - mean(test_score) )/sd(test_score)
 ```
 
-```{r q3-check}
-grade_this_code()
-```
+
 
 ## 7. Covariance 
 - When two variables are related, we would say that the variables *covary*, meaning that they share some common variance between (Y and X1):
