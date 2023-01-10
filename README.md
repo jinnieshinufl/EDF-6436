@@ -2,7 +2,7 @@
 
 ## Fall 2022 - EDF 6436: Theory of Measurement 
 
-Welcome everyone! This is a repository for the lab materials provided in EDF 6436 - SPRING 2022
+Welcome everyone! This is a repository for the lab materials provided in EDF 6938 - SPRING 2023 (Previously EDF 6436)
 
 
 You can copy and past this following code in R to run the lab tutorial (You only need to run this part once!) 
