@@ -18,7 +18,7 @@ For week 1: Basic Statistics review for EDF 6436
 remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
 learnr::run_tutorial("week1", package = "LabR6436")
 ```
-remotes::install_github("jinnieshinufl/EDF-6436/lab/LabR6436", build_vignettess = TRUE)
+
 For week 2: Test Construction and Test Scores 
 
 ```r
