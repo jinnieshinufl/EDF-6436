@@ -9,10 +9,8 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 library(psych)
-library(gradethis)
 library(ggplot2)
 library(CTT)
-tutorial_options(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 
 ```
