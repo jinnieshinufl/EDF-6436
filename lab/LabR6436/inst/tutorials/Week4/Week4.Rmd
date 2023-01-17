@@ -7,11 +7,9 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 library(psych)
-library(gradethis)
 library(truncnorm)
 library(ggplot2)
 library(CTT)
-tutorial_options(exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 
 ```
@@ -84,9 +82,6 @@ pj = # compute the p values
 pj = colMeans(response) 
 ```
 
-```{r, answer1-check}
-grade_this_code()
-```
 
 - Q1: Which of the following items is the most difficult?
 - Q2: Which of the following items is the least difficult? 
