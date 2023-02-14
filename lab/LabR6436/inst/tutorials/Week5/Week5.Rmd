@@ -6,7 +6,6 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(gradethis)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -47,9 +46,6 @@ cor(FormA,FormB)
 cor(FormA,FormB)
 ```
 
-```{r, af2-check}
-grade_this_code()
-```
 
 ## Test-Retest Reliability 
 
@@ -88,9 +84,6 @@ cor(Test1, Test2)
 cor(Test1, Test2)
 ```
 
-```{r, TR3-check}
-grade_this_code()
-```
 
 ## Split-Half Reliability 
 ```{r, sh, echo=TRUE, exercise=TRUE}
